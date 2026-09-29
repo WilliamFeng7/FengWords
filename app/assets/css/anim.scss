@@ -1,0 +1,171 @@
+/* ─────────────────────────────────────────────────────────────
+ * Motion system
+ * transform + opacity only; curves/durations come from the tokens in
+ * main.scss (--ease-out, --dur-*). Enter is always a touch longer than exit.
+ * ───────────────────────────────────────────────────────────── */
+
+.list-move, /* 对移动中的元素应用的过渡 */
+.list-enter-active,
+.list-leave-active {
+  transition:
+    opacity 240ms var(--ease-out),
+    transform 240ms var(--ease-out);
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(16px);
+}
+
+/* 确保将离开的元素从布局流中删除
+  以便能够正确地计算移动的动画。 */
+.list-leave-active {
+  position: absolute;
+}
+
+.fade-enter-active {
+  transition: opacity var(--dur-pop) var(--ease-out);
+}
+
+.fade-leave-active {
+  transition: opacity 140ms var(--ease-out);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* popovers that grow out of their trigger (origin set by the component) */
+.pop-enter-active {
+  transition:
+    opacity var(--dur-pop) var(--ease-out),
+    transform var(--dur-pop) var(--ease-out);
+}
+
+.pop-leave-active {
+  transition:
+    opacity 140ms var(--ease-out),
+    transform 140ms var(--ease-out);
+}
+
+.pop-enter-from,
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+/* icon replace (☆→★, eye→eye-off, sun→moon): the old glyph shrinks away, the new one pops in.
+   Runs only when the icon changes — never on first render. */
+.icon-swap-enter-active {
+  transition:
+    opacity 180ms var(--ease-out),
+    transform 280ms var(--ease-out);
+}
+
+.icon-swap-leave-active {
+  position: absolute;
+  transition:
+    opacity 120ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+
+.icon-swap-enter-from,
+.icon-swap-leave-to {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+/* error shake: two oscillations that settle well before the 500ms wrong-letter reset */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  15% {
+    transform: translate3d(-5px, 0, 0);
+  }
+
+  35% {
+    transform: translate3d(4px, 0, 0);
+  }
+
+  55% {
+    transform: translate3d(-3px, 0, 0);
+  }
+
+  75% {
+    transform: translate3d(2px, 0, 0);
+  }
+}
+
+.shake {
+  animation: shake var(--dur-shake) cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* bento tiles / page sections arriving — translate + opacity only, so it stays on the compositor */
+@keyframes tile-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+/* content swapped in place (tab panes, filtered lists) */
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.swap-in {
+  animation: swap-in 220ms var(--ease-out) backwards;
+}
+
+/* Reduced motion: keep the opacity cues that aid comprehension, drop the movement */
+@media (prefers-reduced-motion: reduce) {
+  .bento > .tile,
+  .tile-enter,
+  .swap-in {
+    animation-name: fade-in;
+  }
+
+  .list-enter-from,
+  .list-leave-to,
+  .pop-enter-from,
+  .pop-leave-to,
+  .icon-swap-enter-from,
+  .icon-swap-leave-to {
+    transform: none;
+  }
+
+  .shake {
+    animation: none;
+  }
+
+  .cta-arrow,
+  .i-nudge,
+  .i-rotate,
+  .i-tilt,
+  .i-flip {
+    transform: none !important;
+  }
+
+  .book,
+  .book:hover,
+  .book:active {
+    transform: none !important;
+  }
+}

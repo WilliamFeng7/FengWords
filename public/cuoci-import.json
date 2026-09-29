@@ -1,0 +1,65 @@
+[
+  {
+    "word": "inception",
+    "phonetic0": "/ɪnˈsepʃn/",
+    "phonetic1": "/ɪnˈsɛpʃən/",
+    "trans": "n. 起初，开端；（机构、计划等的）创立；获得学位",
+    "sentences": "The club has been popular since its inception.\n这个俱乐部从创立之初就很受欢迎。"
+  },
+  {
+    "word": "janitorial",
+    "phonetic0": "/ˌdʒænɪˈteəriəl/",
+    "phonetic1": "/ˌdʒænəˈtɔriəl/",
+    "trans": "adj. 清洁的，保洁的，门卫的",
+    "sentences": "He works in the janitorial department.\n他在保洁部门工作。"
+  },
+  {
+    "word": "representative",
+    "phonetic0": "/ˌreprɪˈzentətɪv/",
+    "phonetic1": "/ˌrɛprɪˈzɛntətɪv/",
+    "trans": "n. 代表，代理人\nadj. 代表性的，典型的",
+    "sentences": "She was elected as the students' representative.\n她当选为学生代表。"
+  },
+  {
+    "word": "catalogue",
+    "phonetic0": "/ˈkætəlɒɡ/",
+    "phonetic1": "/ˈkætəlɔɡ/",
+    "trans": "n. 目录，一览表；（美）大学情况一览\nv. 把…编入目录，为…做目录",
+    "sentences": "You can order the shoes from our catalogue.\n你可以通过我们的目录订购这双鞋。"
+  },
+  {
+    "word": "vendor",
+    "phonetic0": "/ˈvendə/",
+    "phonetic1": "/ˈvɛndɚ/",
+    "trans": "n. 小贩，商贩；供应商，售货机（vending machine）",
+    "sentences": "A street vendor sold hot dogs outside.\n一个街头小贩在外面卖热狗。"
+  },
+  {
+    "word": "custodian",
+    "phonetic0": "/kʌsˈtəʊdiən/",
+    "phonetic1": "/kʌsˈtoʊdiən/",
+    "trans": "n. 管理人，保管人；（学校）保洁员，看守；监护人",
+    "sentences": "The custodian mopped the hallway after lunch.\n午饭后保洁员拖了走廊。"
+  },
+  {
+    "word": "choir",
+    "phonetic0": "/ˈkwaɪə/",
+    "phonetic1": "/ˈkwaər/",
+    "trans": "n. 合唱队，唱诗班；（教堂里的）唱诗班席",
+    "sentences": "The church choir sang beautifully.\n教堂唱诗班唱得很动听。"
+  },
+  {
+    "word": "patron",
+    "phonetic0": "/ˈpeɪtrən/",
+    "phonetic1": "/ˈpeɪtrən/",
+    "trans": "n. 资助人，赞助人；（商店等的）老主顾，顾客",
+    "sentences": "The museum thanked its main patron.\n博物馆感谢了它的主要资助人。"
+  },
+  {
+    "word": "travel agency",
+    "phonetic0": "/ˈtrævl ˌeɪdʒənsi/",
+    "phonetic1": "/ˈtrævl ˌeɪdʒənsi/",
+    "trans": "n. 旅行社",
+    "sentences": "We booked the holiday through a travel agency.\n我们通过一家旅行社订了假期行程。"
+  }
+]

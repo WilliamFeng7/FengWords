@@ -1,0 +1,1001 @@
+@use 'sass:map';
+@use 'anim' as *;
+@use 'shepherd.css';
+
+/* ─────────────────────────────────────────────────────────────
+ * FENG design tokens
+ * Pure blue (brand) on slate neutrals; green / amber / red only as
+ * semantic feedback. Legacy --color-* names are kept and remapped so
+ * every existing component picks up the palette.
+ * ───────────────────────────────────────────────────────────── */
+:root {
+  /* brand & semantic accents */
+  --color-brand: #2563eb;
+  --color-brand-rgb: 37, 99, 235;
+  --color-brand-hover: #1d4ed8;
+  --color-brand-text: #2563eb;
+  --color-brand-light: #60a5fa;
+  --color-brand-soft: #eff6ff;
+  --color-brand-soft-2: #dbeafe;
+  --color-brand-ink: #1d4ed8;
+  --color-brand-deep: #1d4ed8; /* brand surfaces in dark mode */
+  --color-brand-tint: #eff6ff; /* always-light tint: hover of the white CTA on brand surfaces */
+  --color-brand-disabled: #b4c8f0;
+  --color-success: #16a34a;
+  --color-success-text: #15803d;
+  --color-success-soft: #e8f7ee;
+  --color-amber: #f59e0b;
+  --color-amber-text: #b45309;
+  --color-amber-soft: #fff5de;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fdeeee;
+  --color-sky-text: #0369a1;
+  --color-sky-soft: #e0f2fe;
+
+  /* surfaces & ink (slate) */
+  --color-tile: #ffffff;
+  --color-tile-sunken: #f8fafc;
+  --color-stroke: #e2e8f0;
+  --color-stroke-strong: #cbd5e1;
+  --color-ink-1: #0f172a;
+  --color-ink-2: #475569;
+  --color-ink-3: #64748b;
+
+  /* shape */
+  --radius-tile: 1.25rem;
+  --radius-inner: 0.875rem;
+  --radius-control: 0.625rem;
+  --bento-gap: 1rem;
+  --shadow-tile: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -16px rgba(15, 23, 42, 0.14);
+  --shadow-tile-hover: 0 2px 6px rgba(15, 23, 42, 0.06), 0 20px 40px -20px rgba(15, 23, 42, 0.28);
+  --shadow-pop: 0 2px 8px rgba(15, 23, 42, 0.06), 0 16px 44px -12px rgba(15, 23, 42, 0.26);
+  --ring: 0 0 0 3px rgba(37, 99, 235, 0.25);
+
+  /* motion — one signature curve for ~80% of UI, durations in three bands */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-press: 120ms;
+  --dur-hover: 160ms;
+  --dur-pop: 180ms;
+  --dur-tile: 240ms;
+  --dur-modal: 260ms;
+  --dur-shake: 360ms;
+
+  /* legacy palette, remapped */
+  --color-reverse-white: white;
+  --color-reverse-black: black;
+  --bg-history: #f8fafc;
+  --color-item-border: var(--color-stroke);
+
+  --color-tooltip-bg: #ffffff;
+  --color-font-2: #1e293b;
+  --color-font-3: #64748b;
+  --color-font-active-1: white;
+  --color-scrollbar: #cbd5e1;
+
+  --color-sub-gray: #cbd5e1;
+  /* one gutter for the whole desktop shell — window ↔ rail ↔ page ↔ window — equal to the gap between tiles */
+  --page-gutter: 1rem;
+  /* pages fill the space beside the rail (up to ~2000px screens); only ultra-wide screens stop at this width */
+  --page-max: 120rem;
+  /* rail placeholder = gutter + rail width (13.25rem / 3.75rem, see layouts/default.vue);
+     expanded by default, <html data-rail="collapsed"> narrows it */
+  --aside-width: calc(var(--page-gutter) + 13.25rem);
+
+  --article-width: min(50vw, var(--content-max));
+  --article-toolbar-width: min(50vw, var(--content-max));
+  --article-panel-width: 20rem;
+  --article-panel-margin-left: calc(50vw + var(--article-width) / 2 + var(--aside-width) / 2 + 1rem);
+
+  /* practice widths never exceed the space beside the rail (pinned rail = 14rem) */
+  --content-max: calc(100vw - var(--aside-width) - 2.5rem);
+  --toolbar-width: min(50rem, var(--content-max));
+  --panel-width: 24rem;
+
+  --modal-padding: 1.3rem;
+  --space: 0.9rem;
+  --stat-gap: 1rem;
+  --word-panel-margin-left: calc(50vw + var(--aside-width) / 2 + var(--toolbar-width) / 2 + 1rem);
+  --anim-time: 0.2s;
+
+  --color-input-color: #0f172a;
+  --color-input-bg: white;
+  --color-input-border: var(--color-stroke-strong);
+  --color-input-icon: #94a3b8;
+
+  --color-textarea-bg: white;
+  --color-article: #0f172a;
+
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI Variable Text', 'Segoe UI', 'PingFang SC',
+    'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI Variable Display', 'Segoe UI',
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --word-font-family: ui-monospace, sans-serif;
+  --en-article-family: Georgia, sans-serif;
+  --zh-article-family: 'Songti SC', 'SimSun', 'Noto Serif CJK SC', serif;
+
+  --color-primary: #f1f5f9;
+  --color-primary2: white;
+  --color-second: var(--color-tile);
+  --color-third: var(--color-tile-sunken);
+  --color-fourth: #e8eef6;
+  --color-fifth: var(--color-brand-soft);
+
+  --color-card-active: var(--color-brand-soft);
+  --color-sub-text: var(--color-ink-3);
+  --color-main-text: #1e293b;
+  --color-select-bg: var(--color-brand);
+
+  --color-progress-bar: #e2e8f0;
+
+  --color-label-bg: var(--color-tile-sunken);
+  --color-link: var(--color-brand-text);
+
+  --color-card-bg: var(--color-tile);
+
+  --bg-card-primary: var(--color-tile);
+  --bg-card-secend: var(--color-tile-sunken);
+
+  --bg-book: var(--color-tile-sunken);
+
+  --color-line: var(--color-stroke);
+
+  --color-translate-main: #0f172a;
+  --color-translate-second: var(--color-ink-3);
+
+  --book-width: 9.6rem;
+  --book-border: var(--color-stroke);
+}
+
+html.dark {
+  --color-brand-hover: #3b82f6;
+  --color-brand-text: #60a5fa;
+  --color-brand-soft: #0f2547;
+  --color-brand-soft-2: #16335f;
+  --color-brand-ink: #bfdbfe;
+  --color-brand-disabled: #1e3563;
+  --color-success: #22c55e;
+  --color-success-text: #4ade80;
+  --color-success-soft: #0d2a1b;
+  --color-amber-text: #fbbf24;
+  --color-amber-soft: #2b2210;
+  --color-danger: #ef4444;
+  --color-danger-soft: #2d1517;
+  --color-sky-text: #38bdf8;
+  --color-sky-soft: #0b2436;
+
+  --color-tile: #111a2c;
+  --color-tile-sunken: #17223a;
+  --color-stroke: #1f2b43;
+  --color-stroke-strong: #2c3b5a;
+  --color-ink-1: #e2e8f0;
+  --color-ink-2: #94a3b8;
+  --color-ink-3: #7c8ba3;
+
+  --shadow-tile: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 10px 30px -18px rgba(0, 0, 0, 0.7);
+  --shadow-tile-hover: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 22px 44px -20px rgba(0, 0, 0, 0.85);
+  --shadow-pop: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 18px 48px -12px rgba(0, 0, 0, 0.75);
+  --ring: 0 0 0 3px rgba(96, 165, 250, 0.35);
+
+  --color-reverse-white: black;
+  --color-reverse-black: white;
+
+  --color-primary: #0a1020;
+  --color-fourth: #1c2945;
+  --color-fifth: var(--color-brand-soft-2);
+
+  --color-card-active: var(--color-brand-soft-2);
+  --color-sub-text: var(--color-ink-2);
+  --color-main-text: #d6deea;
+  --color-select-bg: #60a5fa;
+
+  --bg-history: var(--color-tile-sunken);
+
+  --color-tooltip-bg: #17223a;
+  --color-font-2: rgba(255, 255, 255, 0.5);
+  --color-font-3: rgba(255, 255, 255, 0.3);
+
+  --color-sub-gray: #26344f;
+  --color-scrollbar: #334564;
+
+  --color-input-color: white;
+  --color-input-bg: var(--color-tile-sunken);
+
+  --color-textarea-bg: var(--color-tile-sunken);
+  --color-article: white;
+
+  --color-progress-bar: #1e2a42 !important;
+
+  --color-label-bg: #0b1222;
+
+  --color-primary2: var(--color-tile);
+
+  --bg-card-primary: #0d1526;
+
+  --color-translate-main: #e2e8f0;
+}
+
+html[data-rail='collapsed'] {
+  --aside-width: calc(var(--page-gutter) + 3.75rem);
+}
+
+/* ── Theme colors (Settings → General) ─────────────────────────
+ * Blue is the default and lives in :root / html.dark above; <html data-accent="…">
+ * swaps only the brand tokens, so every tile, button and chip follows.
+ * Light: 600 fill, 700 hover. Text uses 700 wherever 600 is under 4.5:1 on white.
+ * Dark: the fill stays, hover 500, text 400; soft tints are the fill mixed into the navy page.
+ * ───────────────────────────────────────────────────────────── */
+$accents: (
+  sky: (
+    brand: #0284c7, rgb: (2, 132, 199), hover: #0369a1, text: #0369a1, light: #38bdf8,
+    soft: #f0f9ff, soft-2: #e0f2fe, ink: #0369a1, deep: #0369a1, disabled: #9fd0ea, ring: rgba(2, 132, 199, 0.25),
+    d-hover: #0ea5e9, d-text: #38bdf8, d-soft: #092943, d-soft-2: #083657, d-ink: #bae6fd,
+    d-disabled: #0b4267, d-ring: rgba(56, 189, 248, 0.35),
+  ),
+  teal: (
+    brand: #0d9488, rgb: (13, 148, 136), hover: #0f766e, text: #0f766e, light: #2dd4bf,
+    soft: #f0fdfa, soft-2: #ccfbf1, ink: #0f766e, deep: #0f766e, disabled: #a3d6d2, ring: rgba(13, 148, 136, 0.25),
+    d-hover: #14b8a6, d-text: #2dd4bf, d-soft: #0b2c36, d-soft-2: #0c3c43, d-ink: #99f6e4,
+    d-disabled: #0f484f, d-ring: rgba(45, 212, 191, 0.35),
+  ),
+  green: (
+    brand: #059669, rgb: (5, 150, 105), hover: #047857, text: #047857, light: #34d399,
+    soft: #ecfdf5, soft-2: #d1fae5, ink: #047857, deep: #047857, disabled: #a0d7c6, ring: rgba(5, 150, 105, 0.25),
+    d-hover: #10b981, d-text: #34d399, d-soft: #0a2c30, d-soft-2: #093c39, d-ink: #a7f3d0,
+    d-disabled: #0c4943, d-ring: rgba(52, 211, 153, 0.35),
+  ),
+  indigo: (
+    brand: #4f46e5, rgb: (79, 70, 229), hover: #4338ca, text: #4f46e5, light: #818cf8,
+    soft: #eef2ff, soft-2: #e0e7ff, ink: #4338ca, deep: #4338ca, disabled: #bcb9f5, ring: rgba(79, 70, 229, 0.25),
+    d-hover: #6366f1, d-text: #818cf8, d-soft: #191c49, d-soft-2: #212360, d-ink: #c7d2fe,
+    d-disabled: #292b72, d-ring: rgba(129, 140, 248, 0.35),
+  ),
+  violet: (
+    brand: #7c3aed, rgb: (124, 58, 237), hover: #6d28d9, text: #7c3aed, light: #a78bfa,
+    soft: #f5f3ff, soft-2: #ede9fe, ink: #6d28d9, deep: #6d28d9, disabled: #cdb4f8, ring: rgba(124, 58, 237, 0.25),
+    d-hover: #8b5cf6, d-text: #a78bfa, d-soft: #221a4b, d-soft-2: #2f1f63, d-ink: #ddd6fe,
+    d-disabled: #3a2675, d-ring: rgba(167, 139, 250, 0.35),
+  ),
+  pink: (
+    brand: #db2777, rgb: (219, 39, 119), hover: #be185d, text: #be185d, light: #f472b6,
+    soft: #fdf2f8, soft-2: #fce7f3, ink: #be185d, deep: #be185d, disabled: #f1adcb, ring: rgba(219, 39, 119, 0.25),
+    d-hover: #ec4899, d-text: #f472b6, d-soft: #351633, d-soft-2: #4e193d, d-ink: #fbcfe8,
+    d-disabled: #5e1f49, d-ring: rgba(244, 114, 182, 0.35),
+  ),
+  rose: (
+    brand: #e11d48, rgb: (225, 29, 72), hover: #be123c, text: #be123c, light: #fb7185,
+    soft: #fff1f2, soft-2: #ffe4e6, ink: #be123c, deep: #be123c, disabled: #f4a9b9, ring: rgba(225, 29, 72, 0.25),
+    d-hover: #f43f5e, d-text: #fb7185, d-soft: #36142a, d-soft-2: #4f162e, d-ink: #fecdd3,
+    d-disabled: #601b37, d-ring: rgba(251, 113, 133, 0.35),
+  ),
+  orange: (
+    brand: #ea580c, rgb: (234, 88, 12), hover: #c2410c, text: #c2410c, light: #fb923c,
+    soft: #fff7ed, soft-2: #ffedd5, ink: #c2410c, deep: #c2410c, disabled: #f7c0a3, ring: rgba(234, 88, 12, 0.25),
+    d-hover: #f97316, d-text: #fb923c, d-soft: #38201e, d-soft-2: #52281b, d-ink: #fed7aa,
+    d-disabled: #633220, d-ring: rgba(251, 146, 60, 0.35),
+  ),
+  graphite: (
+    brand: #334155, rgb: (51, 65, 85), hover: #1e293b, text: #334155, light: #94a3b8,
+    soft: #f1f5f9, soft-2: #e2e8f0, ink: #1e293b, deep: #1e293b, disabled: #b1b7be, ring: rgba(51, 65, 85, 0.22),
+    // on the navy page the graphite fill has to lift, so dark mode also swaps the fill itself
+    d-brand: #64748b, d-rgb: (100, 116, 139), d-deep: #475569,
+    d-hover: #7c8ba3, d-text: #cbd5e1, d-soft: #1d2637, d-soft-2: #273144, d-ink: #e2e8f0,
+    d-disabled: #313c50, d-ring: rgba(148, 163, 184, 0.35),
+  ),
+);
+
+@each $name, $c in $accents {
+  html[data-accent='#{$name}'] {
+    --color-brand: #{map.get($c, brand)};
+    --color-brand-rgb: #{map.get($c, rgb)};
+    --color-brand-hover: #{map.get($c, hover)};
+    --color-brand-text: #{map.get($c, text)};
+    --color-brand-light: #{map.get($c, light)};
+    --color-brand-soft: #{map.get($c, soft)};
+    --color-brand-soft-2: #{map.get($c, soft-2)};
+    --color-brand-ink: #{map.get($c, ink)};
+    --color-brand-deep: #{map.get($c, deep)};
+    --color-brand-tint: #{map.get($c, soft)};
+    --color-brand-disabled: #{map.get($c, disabled)};
+    --ring: 0 0 0 3px #{map.get($c, ring)};
+  }
+
+  html.dark[data-accent='#{$name}'] {
+    @if map.has-key($c, d-brand) {
+      --color-brand: #{map.get($c, d-brand)};
+      --color-brand-rgb: #{map.get($c, d-rgb)};
+      --color-brand-deep: #{map.get($c, d-deep)};
+    }
+    --color-brand-hover: #{map.get($c, d-hover)};
+    --color-brand-text: #{map.get($c, d-text)};
+    --color-brand-soft: #{map.get($c, d-soft)};
+    --color-brand-soft-2: #{map.get($c, d-soft-2)};
+    --color-brand-ink: #{map.get($c, d-ink)};
+    --color-brand-disabled: #{map.get($c, d-disabled)};
+    --color-select-bg: #{map.get($c, d-text)};
+    --ring: 0 0 0 3px #{map.get($c, d-ring)};
+  }
+}
+
+@media (max-width: 1706px) {
+  :root {
+    --toolbar-width: min(50vw, var(--content-max));
+    --panel-width: 20rem;
+    --space: 0.5rem;
+
+    --article-width: min(60vw, var(--content-max));
+    --article-toolbar-width: min(60vw, var(--content-max));
+    --article-panel-width: 17rem;
+  }
+}
+
+@media (max-width: 1439px) {
+  :root {
+    --panel-width: 25rem;
+    --toolbar-width: min(60vw, var(--content-max));
+    --article-width: min(60vw, var(--content-max));
+    --article-toolbar-width: min(60vw, var(--content-max));
+    --article-panel-width: 20rem;
+  }
+}
+
+@media (max-width: 1366px) {
+  :root {
+    --toolbar-width: min(70vw, var(--content-max));
+    --stat-gap: 0.5rem;
+    --space: 0.3rem;
+    --article-width: min(70vw, var(--content-max));
+    --article-toolbar-width: min(70vw, var(--content-max));
+  }
+}
+
+@media (max-width: 1150px) {
+  :root {
+    --toolbar-width: min(80vw, var(--content-max));
+    --article-width: min(85vw, var(--content-max));
+    --article-toolbar-width: min(85vw, var(--content-max));
+  }
+}
+
+@media (max-width: 768px) {
+  /* the rail is hidden on phones: nothing to make room for */
+  html:root,
+  html[data-rail] {
+    --aside-width: 0px;
+  }
+
+  :root {
+    --toolbar-width: 100vw;
+    --panel-width: 100vw;
+    --article-width: 100vw;
+    --article-toolbar-width: 100vw;
+    --space: 0.5rem;
+    --stat-gap: 0.3rem;
+    --article-panel-width: 100vw;
+    --word-panel-margin-left: 0;
+    --radius-tile: 1rem;
+    --bento-gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --space: 0.3rem;
+    --stat-gap: 0.2rem;
+  }
+}
+
+.anim {
+  transition:
+    background-color var(--anim-time) ease,
+    color var(--anim-time) ease,
+    border-color var(--anim-time) ease,
+    opacity var(--anim-time) ease;
+}
+
+.en {
+  font-size: 1.1em;
+}
+
+.pos {
+  @apply min-w-10 pr-2 box-border;
+  color: var(--color-select-bg);
+}
+
+.en-article-family {
+  font-family: var(--en-article-family);
+}
+.zh-article-family {
+  font-family: var(--zh-article-family);
+}
+
+.font-family {
+  font-family: var(--font-family);
+}
+
+html,
+body {
+  @apply p-0 m-0 overflow-x-hidden;
+  color: var(--color-main-text);
+  font-family: var(--font-family);
+  background: var(--color-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--color-brand-soft-2);
+}
+
+.page {
+  @apply relative z-1 h-full w-full  flex flex-col;
+}
+
+.mobile-page {
+  @apply fixed left-0 right-0 bottom-0 top-0 overflow-auto font-size-18 w-full h-full flex flex-col;
+
+  & > .page-content {
+    @apply p-10 box-border overflow-auto;
+  }
+}
+
+#app {
+  width: 100vw;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--dur-hover) ease;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-light);
+  outline-offset: 2px;
+}
+
+.link {
+  color: var(--color-link);
+  transition: opacity var(--dur-hover) ease;
+  @apply hover:opacity-80;
+}
+
+.black-link {
+  @apply color-reverse-black;
+  transition: color var(--dur-hover) ease;
+
+  &:hover {
+    color: var(--color-brand-text);
+  }
+}
+
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.6rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 0.1rem;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-scrollbar);
+    border-radius: 0.6rem;
+  }
+}
+
+.panel-page-item {
+  @apply flex flex-col h-full box-border;
+  padding-bottom: var(--space);
+}
+
+.scroll {
+  padding: 0 var(--space);
+  @apply flex-1 overflow-auto;
+}
+
+.virtual-list {
+  @apply overflow-overlay h-full;
+  padding: 0 var(--space);
+}
+
+.list-item-wrapper {
+  padding-bottom: 1rem;
+}
+
+.common-list-item {
+  @apply cursor-pointer w-full box-border bg-third flex justify-between gap-1 p-2;
+  border-radius: var(--radius-control);
+  color: var(--color-main-text);
+  border: 1px solid var(--color-item-border);
+  transition:
+    background-color var(--dur-hover) ease,
+    border-color var(--dur-hover) ease,
+    opacity var(--dur-hover) ease;
+
+  .left {
+    @apply flex gap-1;
+    .title-wrapper {
+      @apply flex flex-col gap-0.5 word-break-break-word;
+    }
+  }
+
+  .right {
+    @apply flex flex-col gap-0.5;
+  }
+
+  svg {
+    @apply opacity-0;
+    transition: opacity var(--dur-hover) ease;
+  }
+
+  &.disabled {
+    @apply opacity-50;
+  }
+
+  &.active {
+    @apply bg-fifth opacity-100;
+    border-color: var(--color-brand-soft-2);
+
+    .item-sub-title {
+      color: var(--color-sub-text);
+    }
+  }
+
+  .fill {
+    svg {
+      opacity: 1 !important;
+    }
+  }
+
+  &:hover {
+    @extend .active;
+
+    svg {
+      opacity: 1;
+    }
+  }
+
+  .item-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-main-text);
+    flex-wrap: wrap;
+
+    span {
+      flex-shrink: 0;
+    }
+
+    .word {
+      font-size: 1.2rem;
+    }
+
+    .phonetic {
+      font-size: 0.9rem;
+      color: var(--color-ink-3);
+    }
+  }
+
+  .item-sub-title {
+    font-size: 1rem;
+    color: var(--color-ink-3);
+  }
+}
+
+.word-shadow {
+  color: transparent !important;
+  text-shadow: #b0b0b0 0 0 0.8rem;
+  user-select: none;
+}
+
+.common-title {
+  min-height: 2.8rem;
+  font-size: 1.1rem;
+  color: var(--color-main-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container2 {
+  @apply w-5/10 pt-5;
+}
+
+.center {
+  @apply flex justify-center items-center;
+}
+
+.center-col {
+  @extend .center;
+  @apply flex-col;
+}
+
+.card-white {
+  @apply card;
+  background: var(--color-card-bg);
+}
+
+.inline-center {
+  @apply inline-flex justify-center items-center;
+}
+
+.title {
+  @apply text-lg font-semibold;
+  color: var(--color-ink-1);
+  letter-spacing: -0.01em;
+}
+
+/* ── Bento ────────────────────────────────────────────────── */
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--bento-gap);
+  container-type: inline-size;
+  margin-bottom: 2rem;
+}
+
+.tile {
+  position: relative;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 1.25rem;
+  background: var(--color-tile);
+  border: 1px solid var(--color-stroke);
+  border-radius: var(--radius-tile);
+  box-shadow: var(--shadow-tile);
+}
+
+.tile-head {
+  @apply flex items-center justify-between gap-3 flex-wrap;
+  min-height: 2rem;
+}
+
+.tile-actions {
+  @apply flex items-center gap-4 text-sm;
+}
+
+.tile-eyebrow {
+  @apply inline-flex items-center gap-1.5 text-xs font-semibold uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-3);
+}
+
+.tile-icon {
+  @apply inline-flex items-center justify-center shrink-0 text-lg;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.75rem;
+  background: var(--color-brand-soft);
+  color: var(--color-brand-text);
+}
+
+.tile-num {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-ink-1);
+  line-height: 1.1;
+}
+
+/* the brand hero tile: solid brand color, white ink */
+.tile--brand {
+  --tile-ink: #fff;
+  background: var(--color-brand);
+  border-color: transparent;
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.18) inset,
+    0 18px 40px -22px rgba(var(--color-brand-rgb), 0.6);
+
+  .title,
+  .tile-num {
+    color: #fff;
+  }
+
+  .tile-eyebrow {
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .tile-icon {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+  }
+
+  a,
+  .color-link {
+    color: #fff !important;
+  }
+}
+
+html.dark .tile--brand {
+  background: var(--color-brand-deep);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.14) inset,
+    0 18px 44px -22px rgba(0, 0, 0, 0.9);
+}
+
+/* entrance: pages are opened tens of times a day, so the cascade stays short — 28ms steps, capped at 5,
+   the whole group lands within 400ms. backwards fill keeps hover transforms free afterwards. */
+.bento > .tile,
+.tile-enter {
+  animation: tile-in 260ms var(--ease-out) backwards;
+  animation-delay: calc(min(var(--i, 0), 5) * 28ms);
+}
+
+/* shared page title */
+.page-title {
+  @apply text-2xl font-bold;
+  color: var(--color-ink-1);
+  letter-spacing: -0.02em;
+}
+
+.book {
+  @apply p-3 relative cursor-pointer flex flex-col justify-between shrink-0;
+  background: var(--bg-book);
+  border: 1px solid var(--book-border);
+  border-radius: var(--radius-inner);
+  box-sizing: border-box;
+  width: var(--book-width);
+  height: calc(var(--book-width) * 1.4);
+  transition:
+    transform var(--dur-tile) var(--ease-out),
+    box-shadow var(--dur-tile) var(--ease-out),
+    background-color var(--dur-hover) ease,
+    border-color var(--dur-hover) ease;
+
+  &:active {
+    transform: scale(0.98);
+    transition-duration: var(--dur-press);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .book:hover {
+    background: var(--color-fifth);
+    border-color: var(--color-brand-soft-2);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-tile-hover);
+  }
+
+  .book:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
+.line {
+  width: 100%;
+  border-bottom: 1px solid var(--color-line);
+  transition: color var(--dur-hover) ease;
+
+  &:hover {
+    color: var(--color-brand-text);
+  }
+}
+
+.line-white {
+  width: 100%;
+  border-bottom: 1px dashed #ababab;
+}
+
+.red-point {
+  @apply bg-red w-3 h-3 rounded-full absolute right-3;
+}
+
+.cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1.8rem;
+  animation: underline 1s infinite steps(1, start);
+}
+
+@keyframes underline {
+  0%,
+  100% {
+    border-left: 0.12rem solid var(--color-article);
+  }
+
+  50% {
+    border-left: 0.12rem solid transparent;
+  }
+}
+
+.btn-no-margin {
+  .base-button + .base-button {
+    margin-left: 0 !important;
+  }
+}
+
+.target-number {
+  @apply text-3xl!;
+  color: var(--color-brand-text) !important;
+}
+
+.highlight-word {
+  color: var(--color-select-bg);
+}
+
+/* ── Icon micro-motion ─────────────────────────────────────────
+ * An icon inside a button hints at what the button does when you hover it:
+ *   .cta-arrow / .i-nudge  arrows lean forward     .i-rotate  plus turns a quarter
+ *   .i-tilt  pencils tip over to write             .i-flip    swap arrows flip over
+ * A few px / degrees, 220ms ease-out, real pointers only — never on touch, never on keyboard actions.
+ */
+.cta-arrow,
+.i-nudge,
+.i-rotate,
+.i-tilt,
+.i-flip {
+  transition: transform 220ms var(--ease-out);
+}
+
+.i-tilt {
+  transform-origin: 20% 80%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :is(.base-button, .icon-wrapper, a, button, .book):hover {
+    .cta-arrow,
+    .i-nudge {
+      transform: translateX(3px);
+    }
+
+    .i-rotate {
+      transform: rotate(90deg);
+    }
+
+    .i-tilt {
+      transform: rotate(-14deg);
+    }
+
+    .i-flip {
+      transform: rotateY(180deg);
+    }
+  }
+}
+
+/* "off" state for icons that have no -off glyph: a slash draws itself across the icon */
+.icon-slash {
+  position: relative;
+  display: inline-flex;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    top: 50%;
+    height: 2px;
+    margin-top: -1px;
+    border-radius: 2px;
+    background: currentColor;
+    box-shadow: 0 0 0 1.5px var(--color-tile);
+    transform: rotate(-45deg);
+    animation: icon-slash-in 260ms var(--ease-out) backwards;
+  }
+}
+
+@keyframes icon-slash-in {
+  from {
+    transform: rotate(-45deg) scaleX(0);
+  }
+}
+
+/* first-run tour (Shepherd) in FENG colors — its position lives in transform, so only color/opacity move */
+.shepherd-element {
+  background: var(--color-tile);
+  border: 1px solid var(--color-stroke);
+  border-radius: 0.875rem;
+  box-shadow: var(--shadow-pop);
+  transition:
+    opacity 200ms var(--ease-out),
+    visibility 200ms;
+}
+
+.shepherd-arrow:before {
+  background: var(--color-tile);
+}
+
+.shepherd-text {
+  color: var(--color-ink-1);
+}
+
+.shepherd-button {
+  background: var(--color-brand);
+  color: #fff;
+  border-radius: var(--radius-control);
+  transition:
+    background-color var(--dur-hover) ease,
+    transform 160ms var(--ease-out);
+
+  &:not(:disabled):hover {
+    background: var(--color-brand-hover);
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ── Route change (plugins/05.route-transition.client.ts) ─────────
+ * The old page steps back in 140ms — fading and lifting 6px — on top of the new page, whose tiles are already
+ * rising in. No blank frame between pages. Only opacity + transform (a full-screen blur cost frames on big
+ * screens). The rail and the top bar are the same on both sides, so they stay perfectly still.
+ */
+html.vt-route {
+  .rail {
+    view-transition-name: fw-rail;
+  }
+
+  .top-bar {
+    view-transition-name: fw-topbar;
+  }
+
+  .mobile-top-nav {
+    view-transition-name: fw-mnav;
+  }
+}
+
+html.vt-route::view-transition-old(fw-rail),
+html.vt-route::view-transition-old(fw-topbar),
+html.vt-route::view-transition-old(fw-mnav) {
+  display: none;
+}
+
+html.vt-route::view-transition-group(fw-rail),
+html.vt-route::view-transition-group(fw-topbar),
+html.vt-route::view-transition-group(fw-mnav),
+html.vt-route::view-transition-new(fw-rail),
+html.vt-route::view-transition-new(fw-topbar),
+html.vt-route::view-transition-new(fw-mnav) {
+  animation: none;
+}
+
+html.vt-route::view-transition-old(root) {
+  z-index: 1;
+  mix-blend-mode: normal;
+  animation: vt-page-out 140ms var(--ease-out) both;
+}
+
+html.vt-route::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+@keyframes vt-page-out {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+/* theme switch: one crossfade instead of hundreds of per-element color transitions */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: ease;
+}
+
+/* clicking the theme toggle: the new theme is uncovered by a circle growing from the click point */
+html.theme-reveal::view-transition-old(root),
+html.theme-reveal::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}

@@ -1,0 +1,338 @@
+[
+  {
+    "word": "Introductory",
+    "phonetic0": "/ˌɪntrəˈdʌktəri/",
+    "phonetic1": "/ˌɪntrəˈdʌktəri/",
+    "trans": "adj. 介绍性的，入门的，导论的",
+    "sentences": "The course begins with an introductory lecture on campus life.\n这门课以一场关于校园生活的入门讲座开始。"
+  },
+  {
+    "word": "Intermediate",
+    "phonetic0": "/ˌɪntəˈmiːdiət/",
+    "phonetic1": "/ˌɪntərˈmiːdiət/",
+    "trans": "adj. 中级的，中层的，过渡的\nn. 中级课程；中转站",
+    "sentences": "She enrolled in an intermediate French class.\n她报了一个法语中级班。"
+  },
+  {
+    "word": "Grant",
+    "phonetic0": "/ɡrɑːnt/",
+    "phonetic1": "/ɡrænt/",
+    "trans": "v. 授予，准许，承认\nn.（政府或机构的）拨款，补助金",
+    "sentences": "The university received a research grant from the government.\n这所大学获得了一项政府研究拨款。"
+  },
+  {
+    "word": "Prerequisite",
+    "phonetic0": "/ˌpriːˈrekwɪzɪt/",
+    "phonetic1": "/ˈprɛrəkwɪzɪt/",
+    "trans": "n. 先决条件，前提；（修读某课前必修的）先修课程",
+    "sentences": "Calculus is a prerequisite for this physics course.\n微积分是这门物理课的必修先修课。"
+  },
+  {
+    "word": "Manuscript",
+    "phonetic0": "/ˈmænjuskrɪpt/",
+    "phonetic1": "/ˈmænjəˌskrɪpt/",
+    "trans": "n. 手稿，原稿；手写本",
+    "sentences": "The author submitted the manuscript to the publisher.\n作者把手稿交给了出版商。"
+  },
+  {
+    "word": "panel",
+    "phonetic0": "/ˈpænl/",
+    "phonetic1": "/ˈpænl/",
+    "trans": "n. 专家小组，座谈小组；面板，仪表板",
+    "sentences": "A panel of judges will evaluate the finalists.\n一个评委小组将为决赛选手打分。"
+  },
+  {
+    "word": "salt marsh",
+    "phonetic0": "/ˈsɔːlt mɑːʃ/",
+    "phonetic1": "/ˈsɔːlt mɑːrʃ/",
+    "trans": "n. 盐沼，咸水沼泽（潮间带的草本湿地）",
+    "sentences": "The salt marsh is home to many species of birds.\n这片盐沼栖息着许多鸟类。"
+  },
+  {
+    "word": "eligible",
+    "phonetic0": "/ˈelɪdʒəbl/",
+    "phonetic1": "/ˈelɪdʒəbl/",
+    "trans": "adj. 符合条件的，有资格的，适于被选中的",
+    "sentences": "Only students over eighteen are eligible to apply.\n只有年满十八岁的学生才有资格申请。"
+  },
+  {
+    "word": "preparatory",
+    "phonetic0": "/prɪˈpærətri/",
+    "phonetic1": "/prɪˈpɛrəˌtɔri/",
+    "trans": "adj. 预备的，准备的；预科的（preparatory school 预科学校）",
+    "sentences": "He attended a preparatory school before college.\n上大学前他就读于一所预科学校。"
+  },
+  {
+    "word": "payroll",
+    "phonetic0": "/ˈpeɪrəʊl/",
+    "phonetic1": "/ˈpeɪˌroʊl/",
+    "trans": "n. 工资单，工资总额；领取工资的名单",
+    "sentences": "The company added ten new workers to its payroll.\n公司把十名新工人列入工资名单。"
+  },
+  {
+    "word": "sabbatical",
+    "phonetic0": "/səˈbætɪkl/",
+    "phonetic1": "/səˈbætɪkəl/",
+    "trans": "n.（带薪）学术休假，长期休假\nadj. 休假期的",
+    "sentences": "The professor took a sabbatical to write his book.\n这位教授休了学术假去写他的书。"
+  },
+  {
+    "word": "deter",
+    "phonetic0": "/dɪˈtɜː/",
+    "phonetic1": "/dɪˈtɜr/",
+    "trans": "v. 阻止，威慑，使不敢（deter sb from doing sth）",
+    "sentences": "Strict rules did not deter students from cheating.\n严格的规则并没有阻止学生作弊。"
+  },
+  {
+    "word": "ceremonial",
+    "phonetic0": "/səˈrəʊməniəl/",
+    "phonetic1": "/səˈrɛməˈniəl/",
+    "trans": "adj. 礼仪的，仪式的，庆典的",
+    "sentences": "The president attended a ceremonial parade.\n总统出席了一场庆典游行。"
+  },
+  {
+    "word": "confrontational",
+    "phonetic0": "/ˌkɒnfrənˈteɪʃənl/",
+    "phonetic1": "/ˌkɑːnfrənˈteɪʃənəl/",
+    "trans": "adj. 对抗的，挑衅的，引起冲突的",
+    "sentences": "His confrontational tone made the meeting tense.\n他挑衅的语气让会议气氛紧张。"
+  },
+  {
+    "word": "straw poll",
+    "phonetic0": "/strɔː pɒl/",
+    "phonetic1": "/strɔ poʊl/",
+    "trans": "n.（非正式的）民意测验，意向投票，试探性投票",
+    "sentences": "A straw poll showed strong support for the new policy.\n一项非正式民调显示新政策获得强烈支持。"
+  },
+  {
+    "word": "periodical",
+    "phonetic0": "/ˌpɪəriˈɒdɪkl/",
+    "phonetic1": "/ˌpɪriˈɑdɪkəl/",
+    "trans": "n. 期刊，定期刊物\nadj. 周期的，定期的",
+    "sentences": "The library subscribes to dozens of academic periodicals.\n图书馆订阅了几十种学术期刊。"
+  },
+  {
+    "word": "Circumstance",
+    "phonetic0": "/ˈsɜːkəmstəns/",
+    "phonetic1": "/ˈsɜrkəmstæns/",
+    "trans": "n. 情况，环境，境遇；(复数)经济状况，境况",
+    "sentences": "Under no circumstances should you give out your password.\n无论如何你都不应泄露密码。"
+  },
+  {
+    "word": "Committee",
+    "phonetic0": "/kəˈmɪti/",
+    "phonetic1": "/kəˈmɪti/",
+    "trans": "n. 委员会",
+    "sentences": "The admissions committee meets every Thursday.\n招生委员会每周四开会。"
+  },
+  {
+    "word": "Stop by",
+    "phonetic0": "/stɒp baɪ/",
+    "phonetic1": "/stɑːp baɪ/",
+    "trans": "v. 顺路拜访，顺便到访，停留一下（stop by = 顺路过去）",
+    "sentences": "Feel free to stop by my office after class.\n课后欢迎顺路来我办公室。"
+  },
+  {
+    "word": "Bulletin board",
+    "phonetic0": "/ˈbʊlətɪn bɔːd/",
+    "phonetic1": "/ˈbʊlətɪn bɔːrd/",
+    "trans": "n. 公告栏，布告板，公布板",
+    "sentences": "The exam schedule is on the student bulletin board.\n考试时间表贴在学生公告栏上。"
+  },
+  {
+    "word": "Athletic gymnasium",
+    "phonetic0": "/æθˈletɪk dʒɪˈmeɪziəm/",
+    "phonetic1": "/æθˈlɛtɪk dʒɪˈmneɪziəm/",
+    "trans": "n. 体育馆，运动健身馆",
+    "sentences": "The basketball finals were held in the athletic gymnasium.\n篮球决赛在体育馆举行。"
+  },
+  {
+    "word": "Fine",
+    "phonetic0": "/faɪn/",
+    "phonetic1": "/faɪn/",
+    "trans": "n. 罚款\nv. 处…以罚款\nadj. 很好的，不错的；（身体）健康的；细微的",
+    "sentences": "He had to pay a fine for parking in the wrong lot.\n他因停错车场而被罚款。"
+  },
+  {
+    "word": "Auditorium",
+    "phonetic0": "/ˌɔːdɪˈtɔːriəm/",
+    "phonetic1": "/ˌɑːdətɔːriəm/",
+    "trans": "n. 礼堂，会堂；（剧院的）观众席",
+    "sentences": "The graduation ceremony was held in the main auditorium.\n毕业典礼在主礼堂举行。"
+  },
+  {
+    "word": "Syllable",
+    "phonetic0": "/ˈsɪləbl/",
+    "phonetic1": "/ˈsɪləbl/",
+    "trans": "n. 音节",
+    "sentences": "The word 'banana' has three syllables.\n单词 banana 有三个音节。"
+  },
+  {
+    "word": "Slice",
+    "phonetic0": "/slaɪs/",
+    "phonetic1": "/slaɪs/",
+    "trans": "n. 薄片，切片；一份，部分\nv. 把…切成薄片",
+    "sentences": "She cut a thin slice of cake for each guest.\n她给每位客人切了一薄片蛋糕。"
+  },
+  {
+    "word": "Choir",
+    "phonetic0": "/ˈkwaɪə/",
+    "phonetic1": "/ˈkwaɪər/",
+    "trans": "n. 合唱团，唱诗班",
+    "sentences": "The school choir performed at the winter concert.\n学校合唱团在冬季音乐会上演出。"
+  },
+  {
+    "word": "Chapel",
+    "phonetic0": "/ˈtʃæpl/",
+    "phonetic1": "/ˈtʃæpəl/",
+    "trans": "n. 小教堂，礼拜堂（学校/医院/监狱内的）",
+    "sentences": "Students may attend a quiet service in the campus chapel.\n学生可以到校园小教堂参加安静的礼拜。"
+  },
+  {
+    "word": "Violate",
+    "phonetic0": "/ˈvaɪəleɪt/",
+    "phonetic1": "/ˈvaɪəˌleɪt/",
+    "trans": "v. 违反，侵犯，违背；亵渎，扰乱",
+    "sentences": "Parking here would violate campus rules.\n在这里停车会违反校规。"
+  },
+  {
+    "word": "Amusement",
+    "phonetic0": "/əˈmjuːzmənt/",
+    "phonetic1": "/əˈmjuzmənt/",
+    "trans": "n. 娱乐，消遣；愉悦（amusement park 游乐园）",
+    "sentences": "The students watched the show with great amusement.\n学生们饶有兴致地观看了演出。"
+  },
+  {
+    "word": "Poll",
+    "phonetic0": "/pəʊl/",
+    "phonetic1": "/poʊl/",
+    "trans": "n. 投票，民意调查\nv. 对…进行民意调查；获得（票数），计数",
+    "sentences": "A recent poll found that most voters support the plan.\n最新民调发现多数选民支持该计划。"
+  },
+  {
+    "word": "Retrieve",
+    "phonetic0": "/rɪˈtriːv/",
+    "phonetic1": "/rɪˈtriv/",
+    "trans": "v. 取回，找回；检索，恢复（信息）",
+    "sentences": "You can retrieve your transcript from the registrar's website.\n你可以从教务处网站调取你的成绩单。"
+  },
+  {
+    "word": "Expire",
+    "phonetic0": "/ɪkˈspaɪə/",
+    "phonetic1": "/ɪkˈspaɪr/",
+    "trans": "v. 到期，届满；过期，失效；（协议/证件）终止",
+    "sentences": "My library card expires at the end of the month.\n我的借书证月底到期。"
+  },
+  {
+    "word": "Alumni",
+    "phonetic0": "/əˈlʌmnaɪ/",
+    "phonetic1": "/əˈlʌmnaɪ/",
+    "trans": "n. 校友（复数），毕业生；校友会成员",
+    "sentences": "The university invited its alumni to the reunion.\n大学邀请校友参加同学会。"
+  },
+  {
+    "word": "Track meet",
+    "phonetic0": "/træk miːt/",
+    "phonetic1": "/træk mit/",
+    "trans": "n. 田径运动会，田径赛",
+    "sentences": "She won first place in the 100 metres at the track meet.\n她在田径运动会的100米比赛中夺得第一。"
+  },
+  {
+    "word": "Parking lot",
+    "phonetic0": "/ˈpɑːkɪŋ lɒt/",
+    "phonetic1": "/ˈpɑːrkɪŋ lɑːt/",
+    "trans": "n. 停车场（露天）",
+    "sentences": "The parking lot near the gym is full before nine.\n体育馆旁的停车场九点前就满了。"
+  },
+  {
+    "word": "Lot",
+    "phonetic0": "/lɒt/",
+    "phonetic1": "/lɑːt/",
+    "trans": "n. 全部，许多；一块地，场地；抽签，命运（a lot of 许多）",
+    "sentences": "They bought a vacant lot behind the school.\n他们买下了学校后面的一块空地。"
+  },
+  {
+    "word": "Garage",
+    "phonetic0": "/ˈɡærɑːʒ/",
+    "phonetic1": "/ɡəˈrɑʒ/",
+    "trans": "n. 车库；（汽车）修理厂，保养场",
+    "sentences": "He parked the car in the garage overnight.\n他把车停在车库里过夜。"
+  },
+  {
+    "word": "Recreation",
+    "phonetic0": "/ˌrekriˈeɪʃn/",
+    "phonetic1": "/ˌrɛkrieʃən/",
+    "trans": "n. 娱乐，消遣，休闲活动",
+    "sentences": "The campus offers many recreation programs for students.\n学校为学生开设许多休闲活动项目。"
+  },
+  {
+    "word": "whole seller",
+    "phonetic0": "/ˈhəʊl ˌselə/",
+    "phonetic1": "/ˈhoʊl ˌsɛl/",
+    "trans": "n. 批发商（应为 wholesaler，通常连写）",
+    "sentences": "A whole seller, more commonly written as wholesaler, buys goods in bulk.\n批发商（通常写作 wholesaler）批量采购商品。"
+  },
+  {
+    "word": "Custodian",
+    "phonetic0": "/kʌsˈtəʊdiən/",
+    "phonetic1": "/kʌsˈtoʊdiən/",
+    "trans": "n. 管理员，看管人，保管人；（学校）勤杂工，保洁；监护人",
+    "sentences": "The custodian locked the gym after the game.\n比赛结束后是那位保洁员锁的体育馆。"
+  },
+  {
+    "word": "inception",
+    "phonetic0": "/ɪnˈsepʃn/",
+    "phonetic1": "/ɪnˈsɛpʃən/",
+    "trans": "n. 开端，开始，创立，起始",
+    "sentences": "The program has been popular since its inception.\n该项目自创立以来一直很受欢迎。"
+  },
+  {
+    "word": "university newsletter",
+    "phonetic0": "/ˌjuːnɪˈvɜːsɪti ˈnjuːzletə/",
+    "phonetic1": "/ˌjunɪˈvɜrsəti ˈnuːzlɛtər/",
+    "trans": "n. 大学校刊，校内通讯，师生简报",
+    "sentences": "Her research was featured in the university newsletter.\n她的研究被刊登在大学校刊上。"
+  },
+  {
+    "word": "janitorial",
+    "phonetic0": "/ˌdʒænɪˈteəriəl/",
+    "phonetic1": "/ˌdʒænəˈtɔriəl/",
+    "trans": "adj. 后勤保洁的，门卫的（janitor 的形容词）",
+    "sentences": "The janitorial staff clean the halls early each morning.\n保洁人员每天清晨打扫走廊。"
+  },
+  {
+    "word": "freight",
+    "phonetic0": "/freɪt/",
+    "phonetic1": "/freɪt/",
+    "trans": "n.（海运/铁路/空运的）货物，货运，运费\nv. 运送（货物），装载",
+    "sentences": "The books were sent to campus by freight.\n这些书通过货运送到学校。"
+  },
+  {
+    "word": "vendor",
+    "phonetic0": "/ˈvendə/",
+    "phonetic1": "/ˈvɛndɚ/",
+    "trans": "n. 供应商，贩售商；（街头）小摊贩；售货机（vending machine）",
+    "sentences": "A food vendor set up a stall outside the stadium.\n一名小吃商贩在体育场外摆了摊。"
+  },
+  {
+    "word": "wholesaler",
+    "phonetic0": "/ˈhəʊlselə/",
+    "phonetic1": "/ˈhoʊlˌseɪlɚ/",
+    "trans": "n. 批发商",
+    "sentences": "The shop buys its coffee from a local wholesaler.\n这家店从本地批发商进咖啡豆。"
+  },
+  {
+    "word": "mug",
+    "phonetic0": "/mʌɡ/",
+    "phonetic1": "/mʌɡ/",
+    "trans": "n.（无柄直筒）马克杯，大杯\nv. 持械抢劫（街头行凶抢劫）",
+    "sentences": "She sipped tea from a large ceramic mug.\n她用一只大号陶瓷马克杯喝茶。"
+  },
+  {
+    "word": "residence hall",
+    "phonetic0": "/ˈrezɪdəns hɔːl/",
+    "phonetic1": "/ˈrɛzɪdəns hɔl/",
+    "trans": "n. 学生宿舍楼，宿舍（= dormitory / dorm）",
+    "sentences": "First-year students live in the east residence hall.\n大一学生住在东边宿舍楼。"
+  }
+]
