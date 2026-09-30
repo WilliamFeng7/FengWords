@@ -5,6 +5,7 @@ import {
   EXPORT_DATA_KEY,
   LIB_JS_URL,
   LOCAL_FILE_KEY,
+  PRACTICE_FLOW_STORAGE_KEY,
   SAVE_DICT_KEY,
   SAVE_SETTING_KEY,
 } from '../config/env'
@@ -18,6 +19,17 @@ import { ref } from 'vue'
 import { PRACTICE_ARTICLE_CACHE, PRACTICE_WORD_CACHE } from '../utils/cache'
 import { usePracticeArticlePersistence, usePracticeWordPersistence } from '../composables/usePracticePersistence.ts'
 import type { BackupData } from '../types'
+import { getParkedSessions } from '../composables/practice-words/dict-switch'
+
+/** 自定义练习流程存在 localStorage，导出时一并带上 */
+function readPracticeFlows(): unknown {
+  try {
+    const raw = localStorage.getItem(PRACTICE_FLOW_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
 
 export function useExport() {
   const store = useBaseStore()
@@ -58,6 +70,10 @@ export function useExport() {
     if (d1) {
       data.val[PRACTICE_ARTICLE_CACHE.key].val = d1
     }
+    const practiceFlow = readPracticeFlows()
+    if (practiceFlow) data.val.practiceFlow = practiceFlow
+    const parked = await getParkedSessions()
+    if (parked.length) data.val.parkedPracticeWord = parked
     return data
   }
 

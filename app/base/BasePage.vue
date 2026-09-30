@@ -25,23 +25,12 @@
 }
 
 
+/* 手机：两边 12px 留白（--page-gutter），和卡片间距一致，内容不贴边 */
 @media (max-width: 768px) {
   .page {
-    width: 100vw !important;
     max-width: none;
-    margin: 0.5rem 0 0;
-    min-height: calc(100vh - 0.5rem);
-    padding: 0 0.5rem;
-    box-sizing: border-box;
-  }
-}
-
-// 超小屏幕适配
-@media (max-width: 480px) {
-  .page {
-    margin-top: 0.3rem;
-    min-height: calc(100vh - 0.3rem);
-    padding: 0 0.3rem;
+    margin: 0.25rem var(--page-gutter) 0;
+    min-height: auto;
   }
 }
 </style>

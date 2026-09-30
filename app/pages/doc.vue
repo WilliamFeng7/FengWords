@@ -252,6 +252,10 @@ function placeSeg() {
   const active = root?.querySelector('.seg-item.is-active') as HTMLElement | null
   if (!root || !active) return
   seg.value = { x: active.offsetLeft, y: active.offsetTop, w: active.offsetWidth, h: active.offsetHeight }
+  // 手机上是一排可横向滑动的：选中项露出来
+  if (root.scrollWidth > root.clientWidth) {
+    active.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: segReady.value ? 'smooth' : 'auto' })
+  }
 }
 
 function selectCategory(id: string) {
@@ -864,6 +868,23 @@ function openInBrowser() {
 
   .res-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 分类排成一行、横向滑动，不再折成好几行 */
+  .seg {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .seg-item {
+    flex-shrink: 0;
+    height: 2.4rem;
   }
 }
 

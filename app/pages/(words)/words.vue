@@ -74,7 +74,29 @@ const router = useRouter()
 const route = useRoute()
 const { nav } = useNav()
 const runtimeStore = useRuntimeStore()
-let loading = $ref(true)
+// 按钮上的加载状态只在确实慢（超过 300ms）时才出现：进页面、换词书通常几十毫秒就好，不再闪一下
+let loading = $ref(false)
+let busyCount = 0
+let busyTimer: ReturnType<typeof setTimeout> | null = null
+let busyWaiters: Array<() => void> = []
+function busyStart() {
+  if (busyCount++ === 0) busyTimer = setTimeout(() => (loading = true), 300)
+}
+function busyEnd() {
+  if (--busyCount > 0) return
+  busyCount = 0
+  if (busyTimer) clearTimeout(busyTimer)
+  busyTimer = null
+  loading = false
+  busyWaiters.splice(0).forEach(resolve => resolve())
+}
+/** 进页面 / 换词书还没准备好时，点开始学习先等它准备好 */
+function whenReady(): Promise<void> {
+  return busyCount ? new Promise(resolve => busyWaiters.push(resolve)) : Promise.resolve()
+}
+// 首次数据准备完成前算作“忙”
+busyStart()
+let firstInitDone = false
 let isSaveData = $ref(false)
 /** 新手引导进行中（从第 4 步点开始学习） */
 let guiding = false
@@ -176,13 +198,13 @@ watch(
     if (a && !b) {
       init()
       _nextTick(async () => {
+        // 引导只给第一次来的用户看：不需要时连引导库都不加载
+        if (!settingStore.first || localStorage.getItem('tour-guide') || isMobile()) return
         const Shepherd = await loadJsLib('Shepherd', LIB_JS_URL.SHEPHERD)
         const tour = new Shepherd.Tour(TourConfig)
         tour.on('cancel', () => {
           localStorage.setItem('tour-guide', '1')
         })
-        const r = localStorage.getItem('tour-guide')
-        if (!settingStore.first || r || isMobile()) return
         // 从词典页“选择词典”回来：继续第 4 步，指向开始学习
         if (route.query.guide && store.sdict.id) {
           tour.addStep({
@@ -238,15 +260,34 @@ async function onvisibilitychange() {
   }
 }
 
-async function init() {
+let wordCatalog: any[] | null = null
+
+async function init(opts: { fresh?: boolean } = {}) {
+  busyStart()
+  try {
+    await prepareStudy(opts)
+  } finally {
+    busyEnd()
+    if (!firstInitDone) {
+      firstInitDone = true
+      busyEnd()
+    }
+  }
+}
+
+async function prepareStudy(opts: { fresh?: boolean }) {
   document.removeEventListener('visibilitychange', onvisibilitychange)
   document.addEventListener('visibilitychange', onvisibilitychange)
 
   let studyIndex = store.word.studyIndex
   if (studyIndex >= 3) {
     if (!store.sdict.custom && !store.sdict.words.length) {
-      let dictList = await fetch(resourceWrap(DICT_LIST.WORD.ALL)).then(r => r.json())
-      let dict = await _getDictDataByUrl(store.sdict)
+      // 目录和单词一起下载；目录只下载一次，内置词书的单词由 _getDictDataByUrl 缓存
+      const [dictList, dict] = await Promise.all([
+        wordCatalog ?? fetch(resourceWrap(DICT_LIST.WORD.ALL)).then(r => r.json()),
+        _getDictDataByUrl(store.sdict),
+      ])
+      wordCatalog = dictList
       let r = dictList.find(v => [v.enName, v.id].includes(store.sdict.id))
       if (r) {
         store.word.bookList[studyIndex].words = dict.words
@@ -271,19 +312,25 @@ async function init() {
     }
   }
 
-  if (!practiceData?.taskWords.new.length && store.sdict.words.length) {
-    const d = await loadPracticeCache()
+  if (opts.fresh || (!practiceData?.taskWords.new.length && store.sdict.words.length)) {
+    const d = store.sdict.words.length ? await loadPracticeCache() : null
+    // 算好之后一次性换上：数字只滚动一次，不会先变成 0 再变成新值
     if (d) {
       practiceData = d
       isSaveData = true
-    } else if (!unsupportedCacheVersion) {
-      refreshStudyTask()
+    } else {
+      if (opts.fresh) {
+        practiceData = { taskWords: { new: [], review: [] } } as any
+        isSaveData = false
+        dueReviewCount = 0
+      }
+      if (!unsupportedCacheVersion && store.sdict.words.length) refreshStudyTask()
     }
   }
-  loading = false
 }
 
 async function startPractice(practiceMode: WordPracticeMode, resetCache: boolean = false): Promise<void> {
+  await whenReady()
   if (unsupportedCacheVersion) {
     Toast.error('当前客户端无法读取这份练习缓存，请升级后再继续')
     return
@@ -493,7 +540,7 @@ let showDictPicker = $ref(false)
 
 async function onPickMyDict(dict: Dict) {
   if (isSameDictResource(store.sdict, dict)) return
-  loading = true
+  busyStart()
   try {
     // 需要已学进度的模式（复习、随机等）换词典后可能用不了，换成常规学习
     if (![WordPracticeMode.Free, WordPracticeMode.System].includes(settingStore.wordPracticeMode)) {
@@ -501,18 +548,30 @@ async function onPickMyDict(dict: Dict) {
     }
     // 两本词典各自没练完的那一组会被收好 / 放回（见 dict-switch.ts）
     await switchStudyDict(getDefaultDict(dict))
-    practiceData = { taskWords: { new: [], review: [] } } as any
-    isSaveData = false
-    dueReviewCount = 0
-    await init()
+    await init({ fresh: true })
     Toast.success(`已切换到「${store.sdict.name}」`)
   } catch (e) {
     console.error(e)
     Toast.error('切换词典失败，请重试')
   } finally {
-    loading = false
+    busyEnd()
   }
 }
+
+// 打开“选择词典”时，顺手在后台把列表里的内置词书先下载好，点下去就能直接切换
+watch(
+  () => showDictPicker,
+  open => {
+    if (!open) return
+    setTimeout(() => {
+      if (!showDictPicker) return
+      for (const d of store.word.bookList.slice(3)) {
+        if (d.custom || d.system || d.words.length || !d.url || isSameDictResource(d, store.sdict)) continue
+        _getDictDataByUrl(d).catch(() => {})
+      }
+    }, 250)
+  }
+)
 
 // 词典列表里前三本是内置的 收藏 / 错词 / 已掌握；展示时自己的在前，内置的放最后
 const builtinBooks = $computed(() => store.word.bookList.slice(0, 3))
@@ -654,7 +713,7 @@ onUnmounted(() => {
               <span class="tabular-nums"> {{ store.sdict?.lastLearnIndex }} / {{ store.sdict.length }} 词</span>
             </div>
           </div>
-          <div class="flex items-center mt-5 gap-3 flex-wrap">
+          <div class="dict-actions flex items-center mt-5 gap-3 flex-wrap">
             <div class="dict-picker-anchor">
               <BaseButton
                 type="info"
@@ -1358,6 +1417,31 @@ onUnmounted(() => {
 .tile-shelf {
   .shelf {
     @apply flex gap-4 flex-wrap mt-4;
+  }
+}
+
+/* 手机：“选择词典”“更改进度”两个按钮并排、各占一半 */
+@media (max-width: 560px) {
+  .tile-dict .dict-actions {
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+
+    > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    :deep(.base-button) {
+      width: 100%;
+    }
+  }
+}
+
+/* 手机：一排正好放 3 本（按页面留白、卡片内边距和间距算出书的宽度），书架不再一本本往下排 */
+@media (max-width: 560px) {
+  .tile-shelf .shelf {
+    gap: 0.6rem;
+    --book-width: calc((100vw - 2 * var(--page-gutter) - 2 * var(--tile-pad) - 2px - 2 * 0.6rem) / 3);
   }
 }
 </style>

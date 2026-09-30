@@ -591,6 +591,33 @@ const { data: recommendBookList, isFetching } = useFetch(resourceWrap(DICT_LIST.
     grid-column: 1 / -1;
     grid-row: auto;
   }
+
+  /* 手机：三个统计并成一排，封面缩小，首屏就能看到“开始学习” */
+  .articles-bento .tile-stat {
+    grid-column: span 4;
+    padding: 0.85rem 0.75rem;
+
+    .stat-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      margin-bottom: 0.35rem;
+      font-size: 1rem;
+    }
+
+    .num {
+      font-size: 1.3rem;
+      line-height: 1.25;
+    }
+
+    .txt {
+      font-size: 0.72rem;
+      line-height: 1.3;
+    }
+  }
+
+  .articles-bento .tile-cover {
+    --book-width: 6.5rem;
+  }
 }
 
 /* ── Shelves ── */

@@ -23,17 +23,15 @@ const faqs = $computed<Faq[]>(() => [
   {
     q: '数据丢失/被清空/不在了',
     a: [
-      '360的垃圾清理功能，清垃圾的时候会自动清理浏览器数据，网站的数据也会被清除，其他软件的同类功能也可能导致数据被清掉',
-      'C盘如果被占满了，是无法保存数据的',
-      '无痕模式无法保存数据，关闭浏览器之后数据就没了',
-      '开户了“自动清除历史记录”选项也无法保存数据，关闭浏览器之后数据就没了',
+      t('cloud_storage_desc'),
+      t('cloud_recovery_desc'),
     ],
   },
   { q: t('qa2_a'), extra: 'keyboard' },
   { q: '按删除键却返回了上一页', extra: 'del' },
   { q: t('qa10_a'), a: [t('qa10_q1'), t('qa10_q2')] },
   { q: t('qa11_a'), a: t('qa11_q') },
-  { q: t('qa3_a'), a: [t('qa3_q1'), t('qa3_q2'), t('qa3_q3')] },
+  { q: t('qa3_a'), a: [t('cloud_storage_desc'), t('cloud_recovery_desc')] },
   { q: t('qa1_a'), a: [t('qa1_q1'), t('qa1_q2')] },
   { q: t('qa4_a'), a: [t('qa4_q1'), t('qa4_q2')] },
   { q: t('qa5_a'), a: [t('qa5_q1'), t('qa5_q2'), t('qa5_q3'), t('qa5_q4')] },
@@ -76,6 +74,18 @@ const columns = $computed(() => [faqs.filter((_, i) => i % 2 === 0), faqs.filter
           </section>
         </div>
       </div>
+
+      <!-- 没找到答案：去反馈（手机底部标签栏里没有“反馈”，从这里进） -->
+      <NuxtLink to="/feedback" class="tile help-more tile-enter" style="--i: 9">
+        <div class="min-w-0">
+          <div class="help-more-title">{{ $t('help_more_title') }}</div>
+          <div class="help-more-desc">{{ $t('help_more_desc') }}</div>
+        </div>
+        <span class="help-more-go">
+          <span>{{ $t('help_go_feedback') }}</span>
+          <IconLucideArrowRight class="i-nudge" />
+        </span>
+      </NuxtLink>
     </div>
   </BasePage>
 </template>
@@ -92,6 +102,54 @@ const columns = $computed(() => [faqs.filter((_, i) => i % 2 === 0), faqs.filter
   display: flex;
   align-items: center;
   gap: 0.875rem;
+}
+
+.help-more {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color var(--dur-hover) ease,
+    transform 160ms var(--ease-out);
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .help-more:hover {
+    border-color: var(--color-brand-soft-2);
+  }
+}
+
+.help-more-title {
+  font-weight: 700;
+  color: var(--color-ink-1);
+}
+
+.help-more-desc {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: var(--color-ink-3);
+}
+
+.help-more-go {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-brand-text);
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+  }
 }
 
 .faq-cols {

@@ -73,6 +73,7 @@ export default defineNuxtConfig({
   },
   // ssr: false,
   routeRules: {
+    '/api/cloud/**': { headers: { 'cache-control': 'private, no-store' } },
     '/words': { ssr: false },
     '/articles': { ssr: false },
     '/setting': { ssr: false },
@@ -140,6 +141,7 @@ export default defineNuxtConfig({
   // 运行时配置
   runtimeConfig: {
     public: {
+      cloudEnabled: !!process.env.DATABASE_URL,
       apiBase: process.env.API_BASE || 'http://localhost/',
       origin: process.env.ORIGIN || '',
       host: process.env.HOST || '',

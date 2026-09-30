@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// 自包含词库导入工具页（TypeWords master 无内置批量导入向导，此页用于把一批单词写入自定义词库）
+// 自包含词库导入工具页（用于把一批单词写入自定义词库）
 // 数据全部走应用自身的 Pinia store -> IndexedDB 持久化，与手动加词完全一致，不改动任何其他文件。
 // 删除本文件即可完全回滚（/vocab-import 会随之 404）。
 import { computed, onMounted, ref } from 'vue'
@@ -208,7 +208,7 @@ onMounted(async () => {
       ✅ 已将 <b>{{ result.added }}</b> 个新单词导入词书「<b>{{ result.name }}</b>」{{
         result.skipped ? `（跳过重复 ${result.skipped} 个）` : ''
       }}，当前共 <b>{{ result.total }}</b> 词。
-      <div class="result-sub">稍等约 1~2 秒本地保存完成后，到「词库」页即可看到并开始练习。</div>
+      <div class="result-sub">{{ $t('cloud_vocabulary_hint') }}</div>
     </div>
   </div>
 </template>

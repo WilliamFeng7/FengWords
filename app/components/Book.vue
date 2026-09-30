@@ -53,7 +53,14 @@ function handleClick(e: MouseEvent) {
       class="book overflow-hidden relative"
       :class="[showCheckbox && 'book-selectable', (selected || checked) && 'book-selected', item?.unavailable && 'book-disabled']"
     >
-      <img class="absolute top-0 left-0 w-full object-cover" v-if="item?.cover" :src="coverSrc" alt="" />
+      <img
+        class="absolute top-0 left-0 w-full object-cover"
+        v-if="item?.cover"
+        :src="coverSrc"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
       <div class="text-base mt-1" v-else>{{ item?.name }}</div>
       <div class="absolute bottom-4 right-3 z-1" v-if="!item?.cover">
         <div>{{ studyProgress }}{{ item?.length }}{{ quantifier }}</div>
@@ -73,7 +80,7 @@ function handleClick(e: MouseEvent) {
         class="absolute left-2 bottom-3 z-3"
       />
       <div class="custom z-1" v-if="item.custom">{{ $t('custom') }}</div>
-      <div class="system z-1" v-else-if="item.system">内置</div>
+      <div class="system z-1" v-else-if="item.system">{{ $t('dict_picker_builtin') }}</div>
       <div class="coming-soon z-3" v-if="item?.unavailable">未开放</div>
       <!--      <div class="custom bg-red! color-white z-1" v-else-if="item.update">更新中</div>-->
       <!--      <div class="sync bg-red! color-white z-1" v-if="!item.sync && isUser && !showCheckbox">未同步</div>-->
@@ -133,6 +140,43 @@ function handleClick(e: MouseEvent) {
   left: -22px;
   top: unset;
   right: unset;
+}
+
+/* 手机上的小书（一排 3 本）：字小一点，不挤 */
+@media (max-width: 560px) {
+  .book {
+    padding: 0.55rem;
+  }
+
+  .text-base {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+
+  .absolute.bottom-4 {
+    bottom: 0.7rem;
+    right: 0.55rem;
+    font-size: 0.75rem;
+  }
+
+  .system {
+    left: 0.5rem;
+    bottom: 1rem;
+    padding: 1px 6px;
+    font-size: 10px;
+  }
+
+  /* 书名在左上角，“未开放”挪到左下角，不再压住书名 */
+  .coming-soon {
+    top: auto;
+    right: auto;
+    left: 0.45rem;
+    bottom: 0.6rem;
+    padding: 0 6px;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
 }
 
 .book-disabled {

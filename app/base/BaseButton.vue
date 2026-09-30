@@ -118,6 +118,21 @@ html.dark {
     border-radius: 0.75rem;
   }
 
+  /* 触屏：按钮加高到手指好按的尺寸（小按钮 34px、普通 40px、大按钮 44px） */
+  @media (pointer: coarse) {
+    height: 2.5rem;
+
+    &.small {
+      height: 2.125rem;
+      padding: 0 0.75rem;
+      font-size: 0.85rem;
+    }
+
+    &.large {
+      height: 2.75rem;
+    }
+  }
+
   & > span {
     line-height: 1;
     transform: translateY(-5%);

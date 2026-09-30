@@ -38,5 +38,7 @@ report.html
 .env.*
 !.env.example
 public/vscode
-apps/TypeWordsMiniApp
 *.tsbuildinfo
+.vercel
+.env*
+!.env.example

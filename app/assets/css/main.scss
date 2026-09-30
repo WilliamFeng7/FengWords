@@ -46,6 +46,7 @@
   --radius-inner: 0.875rem;
   --radius-control: 0.625rem;
   --bento-gap: 1rem;
+  --tile-pad: 1.25rem;
   --shadow-tile: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -16px rgba(15, 23, 42, 0.14);
   --shadow-tile-hover: 0 2px 6px rgba(15, 23, 42, 0.06), 0 20px 40px -20px rgba(15, 23, 42, 0.28);
   --shadow-pop: 0 2px 8px rgba(15, 23, 42, 0.06), 0 16px 44px -12px rgba(15, 23, 42, 0.26);
@@ -376,6 +377,7 @@ $accents: (
     --word-panel-margin-left: 0;
     --radius-tile: 1rem;
     --bento-gap: 0.75rem;
+    --page-gutter: 0.75rem;
   }
 }
 
@@ -383,6 +385,7 @@ $accents: (
   :root {
     --space: 0.3rem;
     --stat-gap: 0.2rem;
+    --tile-pad: 1rem;
   }
 }
 
@@ -646,7 +649,7 @@ a {
   position: relative;
   box-sizing: border-box;
   min-width: 0;
-  padding: 1.25rem;
+  padding: var(--tile-pad);
   background: var(--color-tile);
   border: 1px solid var(--color-stroke);
   border-radius: var(--radius-tile);
@@ -723,12 +726,14 @@ html.dark .tile--brand {
     0 18px 44px -22px rgba(0, 0, 0, 0.9);
 }
 
-/* entrance: pages are opened tens of times a day, so the cascade stays short — 28ms steps, capped at 5,
-   the whole group lands within 400ms. backwards fill keeps hover transforms free afterwards. */
+/* entrance: pages are opened tens of times a day, so it stays quick and quiet — 200ms, 20ms steps capped at 4.
+   Tiles start half-visible (see tile-in), so switching pages never shows an empty frame; no page-wide
+   snapshot/crossfade either, which used to freeze the old page while the new one rendered.
+   backwards fill keeps hover transforms free afterwards. */
 .bento > .tile,
 .tile-enter {
-  animation: tile-in 260ms var(--ease-out) backwards;
-  animation-delay: calc(min(var(--i, 0), 5) * 28ms);
+  animation: tile-in 200ms var(--ease-out) backwards;
+  animation-delay: calc(min(var(--i, 0), 4) * 20ms);
 }
 
 /* shared page title */
@@ -924,58 +929,6 @@ html.dark .tile--brand {
 
   &:active {
     transform: scale(0.97);
-  }
-}
-
-/* ── Route change (plugins/05.route-transition.client.ts) ─────────
- * The old page steps back in 140ms — fading and lifting 6px — on top of the new page, whose tiles are already
- * rising in. No blank frame between pages. Only opacity + transform (a full-screen blur cost frames on big
- * screens). The rail and the top bar are the same on both sides, so they stay perfectly still.
- */
-html.vt-route {
-  .rail {
-    view-transition-name: fw-rail;
-  }
-
-  .top-bar {
-    view-transition-name: fw-topbar;
-  }
-
-  .mobile-top-nav {
-    view-transition-name: fw-mnav;
-  }
-}
-
-html.vt-route::view-transition-old(fw-rail),
-html.vt-route::view-transition-old(fw-topbar),
-html.vt-route::view-transition-old(fw-mnav) {
-  display: none;
-}
-
-html.vt-route::view-transition-group(fw-rail),
-html.vt-route::view-transition-group(fw-topbar),
-html.vt-route::view-transition-group(fw-mnav),
-html.vt-route::view-transition-new(fw-rail),
-html.vt-route::view-transition-new(fw-topbar),
-html.vt-route::view-transition-new(fw-mnav) {
-  animation: none;
-}
-
-html.vt-route::view-transition-old(root) {
-  z-index: 1;
-  mix-blend-mode: normal;
-  animation: vt-page-out 140ms var(--ease-out) both;
-}
-
-html.vt-route::view-transition-new(root) {
-  mix-blend-mode: normal;
-  animation: none;
-}
-
-@keyframes vt-page-out {
-  to {
-    opacity: 0;
-    transform: translate3d(0, -6px, 0);
   }
 }
 

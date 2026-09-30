@@ -87,6 +87,8 @@ export interface Article {
 }
 
 export interface Statistics {
+  /** 记录 id（分表存储后每条学习记录单独存，按 id 同步合并） */
+  id?: string
   startDate: number //开始日期
   spend: number //花费时间
   total: number //单词数量
@@ -198,6 +200,10 @@ export interface BackupData {
     [PRACTICE_WORD_CACHE.key]: SaveData
     [PRACTICE_ARTICLE_CACHE.key]: SaveData
     [APP_VERSION.key]: number
+    /** 自定义练习流程（本机 localStorage） */
+    practiceFlow?: any
+    /** 切换词典时各词典收好的“没练完的一组” */
+    parkedPracticeWord?: any[]
   }
 }
 

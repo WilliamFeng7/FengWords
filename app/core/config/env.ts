@@ -72,6 +72,10 @@ export const EXPORT_DATA_KEY = {
   version: 5,
 }
 export const LOCAL_FILE_KEY = 'typing-word-files'
+/** 切换词典时各词典“没练完的那一组”（本机 IndexedDB） */
+export const PARKED_PRACTICE_KEY = 'fw-practice-word-parked'
+/** 自定义练习流程（localStorage） */
+export const PRACTICE_FLOW_STORAGE_KEY = 'PracticeFlowV2'
 export const WEBSITE_VERSION_HASH = 'type-words-website-version-hash'
 export const BACKUP_INDEX_KEY = 'type-words-backup-index'
 export const BACKUP_KEY = 'type-words-backup-'

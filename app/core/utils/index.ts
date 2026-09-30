@@ -48,7 +48,7 @@ function checkRiskKey(origin: object, target: object) {
   return origin
 }
 
-function normalizeStoredDict(val: any): Dict {
+export function normalizeStoredDict(val: any): Dict {
   const next = { ...(val ?? {}) }
   // 历史数据升级：系统虚拟词典补 system: true（无论旧存档是否有此字段）
   const systemIds = [DictId.wordCollect, DictId.wordWrong, DictId.wordKnown, DictId.articleCollect]
@@ -362,13 +362,34 @@ export async function sleep(time: number) {
   return new Promise(resolve => setTimeout(resolve, time))
 }
 
+// 内置词书的单词（CET-4 约 4MB 的 JSON）下载、解析一次后留在内存里：来回切换词书不用重新下载解析。
+// 只留最近用过的 2 本；缓存的是 Promise，同时发起的请求（预加载 + 真正切换）只下载一次。
+const WORD_DICT_CACHE_SIZE = 2
+const wordDictCache = new Map<string, Promise<any>>()
+
+function loadWordDictContent(url: string): Promise<any> {
+  let pending = wordDictCache.get(url)
+  if (pending) {
+    wordDictCache.delete(url)
+  } else {
+    pending = fetch(url).then(r => r.json())
+    pending.catch(() => wordDictCache.delete(url))
+  }
+  wordDictCache.set(url, pending)
+  while (wordDictCache.size > WORD_DICT_CACHE_SIZE) wordDictCache.delete(wordDictCache.keys().next().value)
+  return pending
+}
+
 export async function _getDictDataByUrl(val: DictResource, type: DictType = DictType.word): Promise<Dict> {
   // await sleep(2000);
   let dictResourceUrl = ENV.RESOURCE_URL + `/dicts/${val.language}/word/${val.url}`
   if (type === DictType.article) {
     dictResourceUrl = ENV.RESOURCE_URL + `/dicts/${val.language}/article/${val.url}`
   }
-  let s = await fetch(resourceWrap(dictResourceUrl, val.version)).then(r => r.json())
+  const url = resourceWrap(dictResourceUrl, val.version)
+  let s = type === DictType.article ? await fetch(url).then(r => r.json()) : await loadWordDictContent(url)
+  // 缓存里的数组不直接交出去，免得被调用方改动
+  if (Array.isArray(s)) s = s.slice()
   if (s) {
     //单词词典有两种类型，用article来判断
     if (type === DictType.article) {

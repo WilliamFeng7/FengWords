@@ -1,5 +1,5 @@
 // 自动播种自定义词库 —— 客户端插件（支持多本词书）
-// 应用把词库数据存在浏览器 IndexedDB，没有可写的后端。此插件在应用启动、本地数据(store.load)
+// 学习数据由本地 IndexedDB 缓存并同步 Neon。此插件在应用启动、本地数据(store.load)
 // 加载完成后，读取下方 SEEDS 里每本词书对应的 JSON，把单词以“自定义词库”写入，含【英音/美音音标、
 // 中文释义、例句】，并借助应用自带的 Pinia $subscribe 自动持久化。打开网站即见这些词书。
 // 版本化：某本词书 version 变化时会用最新数据整体重建（覆盖旧的残缺版本），同版本内幂等不重复。
@@ -26,7 +26,7 @@ export default defineNuxtPlugin(nuxtApp => {
   let running = false
 
   async function seedOne(bookName: string, url: string, version: string, lsKey: string) {
-    const store = useBaseStore()
+      const store = useBaseStore()
     try {
       let stored = ''
       try {
@@ -35,6 +35,11 @@ export default defineNuxtPlugin(nuxtApp => {
         /* localStorage 不可用则总是重建 */
       }
       if (stored === version) return // 同版本已播种过，跳过（保留用户后续手动编辑）
+      // 清理浏览器后从云端恢复的词书必须保留进度，不能仅因本机播种标记不存在就重建。
+      if (store.word.bookList.some(b => b.custom && b.name === bookName)) {
+        localStorage.setItem(lsKey, version)
+        return
+      }
 
       const res = await fetch(`${url}?v=${version}`, { cache: 'no-store' })
       if (!res.ok) return

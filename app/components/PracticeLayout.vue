@@ -193,7 +193,7 @@ watch(
 @media (max-width: 480px) {
   .wrap {
     height: calc(100vh - 5rem);
-    padding: 0 0.5rem;
+    padding: 0 0.75rem;
   }
 
   .footer-hide {

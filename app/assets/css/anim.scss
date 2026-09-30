@@ -108,11 +108,12 @@
   perspective: 1000px;
 }
 
-/* bento tiles / page sections arriving — translate + opacity only, so it stays on the compositor */
+/* bento tiles / page sections arriving — translate + opacity only, so it stays on the compositor.
+   Starts half-visible: the page is there on the very first frame, it just settles into place. */
 @keyframes tile-in {
   from {
-    opacity: 0;
-    transform: translate3d(0, 8px, 0);
+    opacity: 0.5;
+    transform: translate3d(0, 6px, 0);
   }
 }
 

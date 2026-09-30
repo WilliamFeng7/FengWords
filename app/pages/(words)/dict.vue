@@ -782,28 +782,46 @@ defineRender(() => {
     margin-bottom: 0 !important;
   }
 
+  /* 手机：第一行 返回 + 书名，第二行三个操作并排等宽 */
   .dict-header {
-    width: 100%;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr) 2.25rem;
     align-items: center;
-    justify-content: center;
+    column-gap: 0.5rem;
+    row-gap: 0.85rem;
+    width: 100%;
+    margin-bottom: 0.6rem;
     text-align: center;
-    gap: 0.75rem;
   }
 
   .dict-header .dict-back {
-    align-self: flex-start;
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .dict-header .dict-title {
     position: static !important;
-    width: 100%;
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+    font-size: 1.3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .dict-header .dict-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.35fr;
+    gap: 0.5rem;
     width: 100%;
-    justify-content: center;
-    gap: 0.75rem;
+
+    :deep(.base-button) {
+      width: 100%;
+      margin-left: 0 !important;
+    }
   }
 
   .tab-navigation {

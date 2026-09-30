@@ -59,7 +59,7 @@ const showSkipStep = computed(() => flowDisplay.value.showSkipStep)
 </script>
 
 <template>
-  <div class="footer">
+  <div class="footer" :class="{ 'is-collapsed': !settingStore.showToolbar }">
     <Tooltip
       :title="`${settingStore.showToolbar ? $t('collapse') : $t('expand')}(${settingStore.shortcutKeyMap[ShortcutKey.ToggleToolbar]})`"
     >
@@ -197,9 +197,19 @@ const showSkipStep = computed(() => flowDisplay.value.showSkipStep)
     }
   }
 
+  /* 工具栏收起时才显示这一行进度；展开时它藏在工具栏后面，手机上会从下面露出来，所以直接隐藏 */
+  &:not(.is-collapsed) .progress-wrap {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .progress-wrap {
     width: var(--toolbar-width);
-    transition: bottom 320ms var(--ease-drawer);
+    transition:
+      bottom 320ms var(--ease-drawer),
+      opacity var(--dur-hover) ease,
+      visibility var(--dur-hover);
     padding: 0 0.6rem;
     box-sizing: border-box;
     position: fixed;

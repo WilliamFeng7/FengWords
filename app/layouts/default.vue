@@ -11,7 +11,7 @@ import { useRoute, useRouter } from 'vue-router'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import { useInit } from '@/core/composables/useInit.ts'
 import { useI18n } from 'vue-i18n'
-import { Supabase } from '@/core/utils/supabase.ts'
+import { Cloud } from '@/core/utils/cloud.ts'
 import WordCollectPopover from '@/components/word/WordCollectPopover.vue'
 import { replayIcon } from '@/base/icon/motion.ts'
 import { APP_NAME } from '@/core/config/env.ts'
@@ -122,12 +122,23 @@ const showIcon = $computed(() => {
   return ['/words', '/articles', '/setting', '/help', '/doc', '/feedback'].includes(route.path)
 })
 
+// 手机底部标签栏：练习 / 测试页要整屏打字，不显示
+const showTabbar = $computed(() => !/^\/(practice|words-test)/.test(route.path))
+const TAB_ROUTES: Record<string, RegExp> = {
+  words: /^\/(words|dict)/,
+  articles: /^\/(articles|book)/,
+  doc: /^\/doc/,
+  help: /^\/(help|feedback|about)/,
+  setting: /^\/setting/,
+}
+const tabActive = (tab: string) => TAB_ROUTES[tab].test(route.path)
+
 onMounted(() => {
   railCollapsed = document.documentElement.getAttribute('data-rail') === 'collapsed'
   // 从其它布局（如首页）切回来时设置早已读完，load 不会再变化，这里直接套用一次
   if (settingStore.load) applyStoredPrefs()
   init()
-  window.umami?.track('sync', { check: Supabase.check() })
+  window.umami?.track('sync', { check: Cloud.check() })
 })
 
 // ── 侧栏选中指示条：一块底色在菜单项之间滑动，而不是每项各自闪变 ──
@@ -268,38 +279,41 @@ function onRailTransitionEnd(e: TransitionEvent) {
       </div>
     </nav>
 
-    <!-- 移动端顶部菜单栏 -->
-    <div class="mobile-top-nav" :class="{ collapsed: settingStore.mobileNavCollapsed }">
-      <div class="nav-items">
-        <div class="nav-item" @click="router.push('/')" :class="{ active: route.path === '/' }">
-          <IconLineMdHomeMd />
-          <span>{{ $t('home_page') }}</span>
-        </div>
-        <div class="nav-item" @click="router.push('/words')" :class="{ active: route.path?.includes('/words') }">
-          <IconLineMdTextBox />
-          <span>{{ $t('words') }}</span>
-        </div>
-        <div class="nav-item" @click="router.push('/articles')" :class="{ active: route.path?.includes('/articles') }">
-          <IconLineMdDocumentList />
-          <span>{{ $t('articles') }}</span>
-        </div>
-        <div class="nav-item" @click="router.push('/setting')" :class="{ active: route.path === '/setting' }">
-          <IconLineMdCog />
-          <span>{{ $t('setting') }}</span>
-          <div class="red-point" v-if="runtimeStore.isError"></div>
-        </div>
-      </div>
-      <div class="nav-toggle" @click="settingStore.mobileNavCollapsed = !settingStore.mobileNavCollapsed">
-        <IconLucideChevronDown class="nav-toggle-icon" />
-      </div>
-    </div>
+    <!-- 手机：底部标签栏（拇指够得着）；练习页全屏，不显示 -->
+    <nav class="mobile-tabbar" v-if="showTabbar" :aria-label="APP_NAME">
+      <NuxtLink to="/words" class="tab-item" :class="{ active: tabActive('words') }">
+        <span class="tab-icon"><IconLineMdTextBox /></span>
+        <span class="tab-label">{{ $t('words') }}</span>
+      </NuxtLink>
+      <NuxtLink to="/articles" class="tab-item" :class="{ active: tabActive('articles') }">
+        <span class="tab-icon"><IconLineMdDocumentList /></span>
+        <span class="tab-label">{{ $t('articles') }}</span>
+      </NuxtLink>
+      <NuxtLink to="/doc" class="tab-item" :class="{ active: tabActive('doc') }">
+        <span class="tab-icon"><IconLineMdFolder /></span>
+        <span class="tab-label">{{ $t('document') }}</span>
+      </NuxtLink>
+      <NuxtLink to="/help" class="tab-item" :class="{ active: tabActive('help') }">
+        <span class="tab-icon"><IconLineMdQuestionCircle /></span>
+        <span class="tab-label">{{ $t('help') }}</span>
+      </NuxtLink>
+      <NuxtLink to="/setting" class="tab-item" :class="{ active: tabActive('setting') }">
+        <span class="tab-icon"><IconLineMdCog /></span>
+        <span class="tab-label">{{ $t('setting') }}</span>
+        <i class="tab-dot" v-if="runtimeStore.isError"></i>
+      </NuxtLink>
+    </nav>
 
     <IeDialog />
 
-    <div class="flex-1 z-1 relative main-content overflow-x-hidden" ref="mainContentRef">
+    <div
+      class="flex-1 z-1 relative main-content overflow-x-hidden"
+      :class="{ 'has-tabbar': showTabbar }"
+      ref="mainContentRef"
+    >
       <div
         class="mt-3 center relative z-9999 pointer-events-none"
-        @click="router.push('/setting?index=6 ')"
+        @click="router.push('/setting?index=6')"
         v-if="runtimeStore.isError"
       >
         <ToastComponent
@@ -690,119 +704,101 @@ html[data-rail='collapsed'] {
   }
 }
 
-// 移动端顶部菜单栏
-.mobile-top-nav {
+// 手机底部标签栏
+.mobile-tabbar {
   position: fixed;
-  top: 0;
   left: 0;
   right: 0;
-  background: var(--color-tile);
-  border-bottom: 1px solid var(--color-item-border);
-  box-shadow: 0 6px 20px -12px rgba(15, 23, 42, 0.25);
+  bottom: 0;
   z-index: 1000;
-  transition: transform 300ms var(--ease-drawer);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 0.3rem 0.25rem calc(0.3rem + env(safe-area-inset-bottom));
+  background: var(--color-tile);
+  border-top: 1px solid var(--color-item-border);
+  box-shadow: 0 -10px 28px -22px rgba(15, 23, 42, 0.45);
 
-  .nav-items {
+  .tab-item {
+    position: relative;
     display: flex;
-    justify-content: space-around;
-    padding: 0.5rem 0;
-    transition: opacity 200ms var(--ease-out);
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0.5rem;
-      cursor: pointer;
-      transition: transform 160ms var(--ease-out);
-      min-height: 44px;
-      min-width: 44px;
-      justify-content: center;
-      position: relative;
-
-      svg {
-        font-size: 1.2rem;
-        margin-bottom: 0.2rem;
-        color: var(--color-main-text);
-        transition: color var(--dur-hover) ease;
-      }
-
-      span {
-        font-size: 0.7rem;
-        color: var(--color-main-text);
-        text-align: center;
-        transition: color var(--dur-hover) ease;
-      }
-
-      &.active {
-        svg,
-        span {
-          color: var(--color-brand-text);
-        }
-      }
-
-      &:active {
-        transform: scale(0.95);
-      }
-
-      .red-point {
-        position: absolute;
-        top: 0.2rem;
-        right: 0.2rem;
-        width: 0.4rem;
-        height: 0.4rem;
-        background: var(--color-danger);
-        border-radius: 50%;
-      }
-    }
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    min-height: 3.1rem;
+    text-decoration: none;
+    color: var(--color-ink-3);
+    -webkit-tap-highlight-color: transparent;
+    transition: color var(--dur-hover) ease;
   }
 
-  .nav-toggle {
-    position: absolute;
-    bottom: -1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--color-tile);
-    border: 1px solid var(--color-item-border);
-    border-top: none;
-    border-radius: 0 0 0.5rem 0.5rem;
-    padding: 0.3rem 0.8rem;
-    cursor: pointer;
-    transition: transform 160ms var(--ease-out);
+  /* 选中项图标背后一枚胶囊：从小到大长出来 */
+  .tab-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.25rem;
+    height: 1.9rem;
+    font-size: 1.3rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: var(--color-brand-soft);
+      opacity: 0;
+      transform: scale(0.6);
+      transition:
+        opacity 200ms var(--ease-out),
+        transform 240ms var(--ease-out);
+    }
 
     svg {
-      font-size: 1rem;
-      color: var(--color-main-text);
-    }
-
-    .nav-toggle-icon {
-      display: block;
-      transition: transform 300ms var(--ease-drawer);
-    }
-
-    &:active {
-      transform: translateX(-50%) scale(0.95);
+      position: relative;
+      transition: transform var(--dur-press) var(--ease-out);
     }
   }
 
-  &.collapsed {
-    transform: translateY(calc(-100% + 1.5rem));
+  .tab-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.72rem;
+    line-height: 1.2;
+  }
 
-    .nav-items {
-      opacity: 0;
-      pointer-events: none;
-    }
+  .tab-item.active {
+    color: var(--color-brand-text);
+    font-weight: 600;
 
-    .nav-toggle-icon {
-      transform: rotate(180deg);
+    .tab-icon::before {
+      opacity: 1;
+      transform: none;
     }
+  }
+
+  .tab-item:active .tab-icon svg {
+    transform: scale(0.88);
+  }
+
+  .tab-dot {
+    position: absolute;
+    top: 0.35rem;
+    right: calc(50% - 1.35rem);
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--color-danger);
   }
 }
 
-.main-content {
-  // 移动端时为主内容区域添加顶部内边距，避免被顶部菜单遮挡
+.main-content.has-tabbar {
+  // 手机：给底部标签栏留出位置
   @media (max-width: 768px) {
-    padding-top: 4rem;
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom));
   }
 }
 
@@ -826,9 +822,9 @@ html[data-rail='collapsed'] {
   }
 }
 
-// 桌面端隐藏移动端顶部菜单栏
+// 桌面端不显示手机标签栏
 @media (min-width: 769px) {
-  .mobile-top-nav {
+  .mobile-tabbar {
     display: none;
   }
 }

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
-import { type Dict, getDefaultDict, type SaveData, type Word } from '../types'
-import { _getStudyProgress, checkAndUpgradeSaveDict, isSameDictResource, parseJsonStr } from '../utils'
+import { type Dict, getDefaultDict, type Word } from '../types'
+import { _getStudyProgress, isSameDictResource } from '../utils'
 import { shallowReactive } from 'vue'
-import { get } from 'idb-keyval'
-import { DictId, IS_DEV, SAVE_DICT_KEY } from '../config/env'
+import { DictId, IS_DEV } from '../config/env'
+import { adoptState, loadState } from '../persistence/store-persistence'
 import type { Card } from 'ts-fsrs'
 import { useSettingStore } from './setting.ts'
 
@@ -185,22 +185,18 @@ export const useBaseStore = defineStore('base', {
       }
       console.timeEnd('$patch')
     },
-    async init(): Promise<SaveData | null> {
-      return new Promise(async resolve => {
-        try {
-          let jsonStr: string = await get(SAVE_DICT_KEY.key)
-          if (jsonStr) {
-            let result = await parseJsonStr(jsonStr, checkAndUpgradeSaveDict)
-            // console.log('data', data)
-            this.setState(result.val)
-            resolve(result)
-          }
-          resolve(null)
-        } catch (e) {
-          console.error('读取本地dict数据失败', e)
-          resolve(null)
-        }
-      })
+    /** 从本地数据库读取（第一次运行新版本时会先把旧的整块数据迁移成分表记录） */
+    async init(): Promise<boolean> {
+      try {
+        const loaded = await loadState()
+        if (loaded) this.setState(loaded.state)
+        adoptState(this.$state, loaded?.hashes)
+        return !!loaded
+      } catch (e) {
+        console.error('读取本地dict数据失败', e)
+        adoptState(this.$state)
+        return false
+      }
     },
     //改变词典
     async changeDict(val: Dict) {

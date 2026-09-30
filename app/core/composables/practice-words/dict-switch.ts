@@ -5,6 +5,8 @@ import { getDefaultDict } from '@/core/types/func.ts'
 import { getDictIdentityList, isSameDictResource } from '@/core/utils'
 import { PRACTICE_WORD_CACHE } from '@/core/utils/cache.ts'
 import { flushStatToStore } from '@/core/composables/usePracticePersistence'
+import { PARKED_PRACTICE_KEY } from '@/core/config/env.ts'
+import { saveCloudExtras } from '@/core/persistence/cloud-extras'
 import { type PracticeWordCacheCompact, usePracticeWordPersistence } from './practice-word-session.ts'
 
 /*
@@ -15,9 +17,9 @@ import { type PracticeWordCacheCompact, usePracticeWordPersistence } from './pra
  * 现在换走时把它按词典收好（本机 IndexedDB），换回来时原样放回，接着练。
  */
 
-const PARKED_KEY = 'fw-practice-word-parked'
+const PARKED_KEY = PARKED_PRACTICE_KEY
 
-type ParkedSession = {
+export type ParkedSession = {
   /** 这组练习属于哪本词典（id / enName） */
   ids: string[]
   cache: PracticeWordCacheCompact
@@ -25,7 +27,8 @@ type ParkedSession = {
   savedAt: number
 }
 
-async function getParkedSessions(): Promise<ParkedSession[]> {
+/** 各词典收好的“没练完的一组”（导出备份时也会带上） */
+export async function getParkedSessions(): Promise<ParkedSession[]> {
   try {
     const list = await get(PARKED_KEY)
     return Array.isArray(list) ? list : []
@@ -96,4 +99,5 @@ export async function switchStudyDict(next: Dict): Promise<void> {
     }
   }
   await set(PARKED_KEY, parked)
+  await saveCloudExtras()
 }

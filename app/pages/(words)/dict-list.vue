@@ -172,73 +172,19 @@ watch(dict_list, val => {
   margin-top: var(--bento-gap);
 }
 
+/* 手机：页面留白由 BasePage 统一给，这里不再叠一层；顶部返回 / 标题 / 搜索保持一行 */
 @media (max-width: 768px) {
   .dict-list-page {
-    padding: 0.8rem;
     margin-bottom: 1rem;
-
-    .header-section {
-      flex-direction: column;
-      gap: 0.5rem;
-
-      .flex.flex-1.gap-4 {
-        width: 100%;
-
-        .base-input {
-          font-size: 0.9rem;
-        }
-
-        .base-button {
-          padding: 0.5rem 0.8rem;
-          font-size: 0.9rem;
-        }
-      }
-
-      .py-1.flex.flex-1.justify-end {
-        width: 100%;
-
-        .page-title {
-          font-size: 1.2rem;
-        }
-
-        .base-icon {
-          font-size: 1.2rem;
-        }
-      }
-    }
-
-    .mt-4 {
-      margin-top: 0.8rem;
-    }
   }
-}
 
-// 超小屏幕适配
-@media (max-width: 480px) {
-  .dict-list-page {
-    padding: 0.5rem;
+  .header-section {
+    min-height: 3.25rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 
-    .header-section {
-      .flex.flex-1.gap-4 {
-        .base-input {
-          font-size: 0.8rem;
-        }
-
-        .base-button {
-          padding: 0.4rem 0.6rem;
-          font-size: 0.8rem;
-        }
-      }
-
-      .py-1.flex.flex-1.justify-end {
-        .page-title {
-          font-size: 1rem;
-        }
-
-        .base-icon {
-          font-size: 1rem;
-        }
-      }
+    .page-title {
+      font-size: 1.15rem;
     }
   }
 }

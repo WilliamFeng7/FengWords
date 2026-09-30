@@ -85,46 +85,33 @@ watch(() => props.groupByTag, () => {
 }
 
 
+/* 手机：分类名在上，标签排成一行横向滑动，不再折成好几行 */
 @media (max-width: 768px) {
   .flex.items-center {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
-
-    .category {
-      font-size: 1rem;
-      font-weight: bold;
-    }
-
-    .tags {
-      margin: 0.5rem 0;
-      gap: 0.3rem;
-
-      .tag {
-        padding: 0.3rem 0.8rem;
-        font-size: 0.9rem;
-        min-height: 44px;
-        min-width: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
   }
-}
 
-// 超小屏幕适配
-@media (max-width: 480px) {
-  .flex.items-center {
-    .category {
-      font-size: 0.9rem;
+  .tags {
+    flex-wrap: nowrap;
+    width: 100%;
+    margin: 0.5rem 0 0.9rem;
+    gap: 0.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
     }
 
-    .tags {
-      .tag {
-        padding: 0.2rem 0.6rem;
-        font-size: 0.8rem;
-      }
+    .tag {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      min-height: 2.25rem;
+      padding: 0 0.85rem;
+      font-size: 0.9rem;
+      white-space: nowrap;
     }
   }
 }

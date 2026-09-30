@@ -6,7 +6,7 @@ export type ModalEntry = { id: string | number; close: () => any }
  * - 避免把“实例状态”放在 SFC 模块作用域里导致多份初始化
  */
 const g = globalThis as any
-const KEY = '__typewords_modalStack__'
+const KEY = '__fengwords_modalStack__'
 
 if (!g[KEY]) g[KEY] = []
 

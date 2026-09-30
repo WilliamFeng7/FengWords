@@ -2,6 +2,8 @@
 import { shallowRef } from 'vue'
 import type { TaskWords, Word } from '@/core/types/types.ts'
 import { WordPracticeMode } from '@/core/types/enum.ts'
+import { PRACTICE_FLOW_STORAGE_KEY } from '@/core/config/env.ts'
+import { saveCloudExtras } from '@/core/persistence/cloud-extras'
 import { shuffle } from '@/core/utils'
 import {
   BUILTIN_FLOWS,
@@ -28,7 +30,7 @@ const VALID_TEMPLATE_IDS_SET = new Set<string>(Object.keys(STEP_TEMPLATE_META))
 const VALID_MODES = new Set(
   Object.values(WordPracticeMode).filter((value): value is WordPracticeMode => typeof value === 'number')
 )
-const FLOW_STORAGE_KEY = 'PracticeFlowV2'
+const FLOW_STORAGE_KEY = PRACTICE_FLOW_STORAGE_KEY
 
 interface UserFlowEntry {
   config: PracticeFlowConfig
@@ -70,6 +72,7 @@ function getFlowStorage(): PracticeFlowStorageData {
 
 function setFlowStorage(data: PracticeFlowStorageData) {
   localStorage.setItem(FLOW_STORAGE_KEY, JSON.stringify(data))
+  void saveCloudExtras()
 }
 
 function isValidSubStep(value: unknown): value is PracticeLoopSubStep {

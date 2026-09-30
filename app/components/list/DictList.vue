@@ -34,78 +34,12 @@ const emit = defineEmits<{
   gap: 1rem;
 }
 
-
-@media (max-width: 768px) {
+/* 手机：一排 3 本。书的宽度 = (屏宽 − 页面留白 − 卡片内边距 − 间距) / 3；
+   Book 的宽高都读 --book-width，所以在列表上改这个变量就行 */
+@media (max-width: 560px) {
   .flex.gap-4.flex-wrap {
-    gap: 0.5rem;
-
-    .book {
-      width: 5rem;
-      height: calc(5rem * 1.4);
-      padding: 0.5rem;
-      cursor: pointer;
-      position: relative;
-      z-index: 10;
-
-      .text-base {
-        font-size: 0.8rem;
-        line-height: 1.2;
-        word-break: break-word;
-        margin-bottom: 0.2rem;
-      }
-
-      .text-sm {
-        font-size: 0.7rem;
-        line-height: 1.1;
-        margin-bottom: 0.3rem;
-      }
-
-      .absolute.bottom-4.right-3 {
-        bottom: 0.8rem;
-        right: 0.3rem;
-        font-size: 0.7rem;
-        line-height: 1;
-      }
-
-      .absolute.bottom-2.left-3.right-3 {
-        bottom: 0.2rem;
-        left: 0.3rem;
-        right: 0.3rem;
-      }
-
-      .absolute.left-3.bottom-3 {
-        left: 0.3rem;
-        bottom: 0.3rem;
-      }
-    }
+    gap: 0.6rem;
+    --book-width: calc((100vw - 2 * var(--page-gutter) - 2 * var(--tile-pad) - 2px - 2 * 0.6rem) / 3);
   }
 }
-
-// 超小屏幕适配
-@media (max-width: 480px) {
-  .flex.gap-4.flex-wrap {
-    gap: 0.3rem;
-
-    .book {
-      width: 4.5rem;
-      height: calc(4.5rem * 1.4);
-      padding: 0.4rem;
-
-      .text-base {
-        font-size: 0.7rem;
-        line-height: 1.1;
-      }
-
-      .text-sm {
-        font-size: 0.6rem;
-        line-height: 1;
-      }
-
-      .absolute.bottom-4.right-3 {
-        font-size: 0.6rem;
-      }
-    }
-  }
-}
-
 </style>
